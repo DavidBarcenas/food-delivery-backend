@@ -1,0 +1,14 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# --names test,lint,typecheck,build
+# "yarn run test --watch=false" \
+# "yarn run build" 
+
+npx concurrently \
+  --kill-others-on-fail \
+  --prefix "[{name}]" \
+  --names "lint,typecheck" \
+  --prefix-colors "bgRed.bold.white,bgGreen.bold.white,bgBlue.bold.white,bgMagenta.bold.white" \
+    "yarn run lint" \
+    "yarn run typecheck" \
