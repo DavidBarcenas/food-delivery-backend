@@ -1,0 +1,13 @@
+version: '3'
+services:
+  database:
+    image: 'postgres'
+    restart: always
+    environment:
+      - POSTGRES_USER=adminer
+      - POSTGRES_PASSWORD=secret123
+      - POSTGRES_DB=food_delivery
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./PGDATA:/var/lib/postgresql/data

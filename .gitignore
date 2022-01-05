@@ -36,5 +36,5 @@ lerna-debug.log*
 # Environments
 *.env
 
-#mongo
-/mongo_data
+#postgres
+/PGDATA
