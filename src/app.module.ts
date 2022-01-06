@@ -9,7 +9,9 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
+      envFilePath:
+        process.env.NODE_ENV === 'development' ? '.env.dev' : '.env.test',
+      ignoreEnvFile: process.env.NODE_ENV === 'production',
     }),
     GraphQLModule.forRoot(),
     DatabaseModule,
