@@ -25,6 +25,7 @@
   "dependencies": {
     "@apollo/gateway": "^0.45.0",
     "@nestjs/common": "^7.6.15",
+    "@nestjs/config": "^1.1.6",
     "@nestjs/core": "^7.6.15",
     "@nestjs/graphql": "^9.1.2",
     "@nestjs/platform-express": "^7.6.15",
@@ -49,6 +50,7 @@
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
     "concurrently": "^7.0.0",
+    "cross-env": "^7.0.3",
     "eslint": "^7.22.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
