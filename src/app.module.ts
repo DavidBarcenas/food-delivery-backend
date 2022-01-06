@@ -26,7 +26,9 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
       }),
     }),
     DatabaseModule,
-    GraphQLModule.forRoot(),
+    GraphQLModule.forRoot({
+      autoSchemaFile: true,
+    }),
     RestaurantsModule,
   ],
   controllers: [],
