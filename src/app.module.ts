@@ -37,7 +37,6 @@ import { User } from './users/user.entity';
       database: process.env.DB_NAME,
       entities: [User],
       synchronize: process.env.NODE_ENV === 'development',
-      logging: true,
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
