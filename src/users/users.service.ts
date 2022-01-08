@@ -63,7 +63,7 @@ export class UsersService {
         };
       }
 
-      const token = this.jwtService.createToken({ email: user.email });
+      const token = this.jwtService.create({ email: user.email });
 
       return {
         ok: true,
@@ -75,5 +75,9 @@ export class UsersService {
         error: 'Sorry. An error has occurred',
       };
     }
+  }
+
+  findByEmail(email: string): Promise<User> {
+    return this.usersRepository.findOne({ email });
   }
 }

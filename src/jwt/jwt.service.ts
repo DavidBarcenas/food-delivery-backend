@@ -9,7 +9,11 @@ export class JwtService {
     @Inject(CONFIG_OPTIONS) private readonly options: JwtModuleOptions,
   ) {}
 
-  createToken(payload: { [prop: string]: string }) {
+  create(payload: { [prop: string]: string }) {
     return jwt.sign(payload, this.options.secretKey);
+  }
+
+  verify(token: string) {
+    return jwt.verify(token, this.options.secretKey);
   }
 }
