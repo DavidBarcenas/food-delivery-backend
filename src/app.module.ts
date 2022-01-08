@@ -5,9 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
 
 import { UsersModule } from './users/users.module';
-import { CommonModule } from './common/common.module';
-import { User } from './users/user.entity';
 import { JwtModule } from './jwt/jwt.module';
+import { User } from './users/user.entity';
 
 @Module({
   imports: [
@@ -42,8 +41,8 @@ import { JwtModule } from './jwt/jwt.module';
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
+    JwtModule.forRoot({ secretKey: process.env.SECRET_KEY }),
     UsersModule,
-    JwtModule,
   ],
   controllers: [],
   providers: [],
