@@ -38,12 +38,22 @@ export class User extends CoreEntity {
   role: UserRole;
 
   @BeforeInsert()
-  async hashPwd(): Promise<void> {
+  async hashPassword(): Promise<void> {
     try {
       this.password = await bcrypt.hash(this.password, 10);
     } catch (error) {
       console.error(error);
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async checkPassword(password: string): Promise<boolean> {
+    try {
+      const isEqual = await bcrypt.compare(password, this.password);
+      return isEqual;
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException();
     }
   }
 }
