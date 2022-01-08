@@ -14,7 +14,7 @@ export class UsersService {
     email,
     password,
     role,
-  }: CreateAccountInput): Promise<{ ok: boolean; error?: string }> {
+  }: CreateAccountInput): Promise<{ ok: boolean; error: string }> {
     try {
       const accountExists = await this.usersRepository.findOne({ email });
 
@@ -29,6 +29,7 @@ export class UsersService {
       await this.usersRepository.save(newAccount);
       return {
         ok: true,
+        error: null,
       };
     } catch (error) {
       return {
