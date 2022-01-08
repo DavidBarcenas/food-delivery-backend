@@ -14,18 +14,27 @@ export class UsersService {
     email,
     password,
     role,
-  }: CreateAccountInput): Promise<string | undefined> {
+  }: CreateAccountInput): Promise<{ ok: boolean; error?: string }> {
     try {
       const accountExists = await this.usersRepository.findOne({ email });
 
       if (accountExists) {
-        return 'There is a user with that email already';
+        return {
+          ok: false,
+          error: 'There is a user with that email already',
+        };
       }
 
       const newAccount = this.usersRepository.create({ email, password, role });
       await this.usersRepository.save(newAccount);
+      return {
+        ok: true,
+      };
     } catch (error) {
-      return "Couldn't create account";
+      return {
+        ok: false,
+        error: "Couldn't create account",
+      };
     }
   }
 }
