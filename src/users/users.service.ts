@@ -6,6 +6,7 @@ import { JwtService } from 'src/jwt/jwt.service';
 import { CreateAccountInput } from './dtos/create-account.dto';
 import { LoginInput } from './dtos/login-dto';
 import { User } from './user.entity';
+import { EditProfileInput } from './dtos/edit-profile.dto';
 
 @Injectable()
 export class UsersService {
@@ -79,5 +80,9 @@ export class UsersService {
 
   findByEmail(email: string): Promise<User> {
     return this.usersRepository.findOne({ email });
+  }
+
+  async editProfile(userId: number, editProfileInput: EditProfileInput) {
+    return this.usersRepository.update(userId, { ...editProfileInput });
   }
 }
