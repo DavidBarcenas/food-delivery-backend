@@ -13,18 +13,16 @@ export class JwtMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     if ('x-jwt' in req.headers) {
       const token = req.headers['x-jwt'];
-      const decoded = this.jwtService.verify(token.toString());
 
-      // eslint-disable-next-line no-prototype-builtins
-      if (typeof decoded === 'object' && decoded.hasOwnProperty('email')) {
-        try {
+      try {
+        const decoded = this.jwtService.verify(token.toString());
+        // eslint-disable-next-line no-prototype-builtins
+        if (typeof decoded === 'object' && decoded.hasOwnProperty('email')) {
           const user = await this.usersService.findByEmail(decoded.email);
           req['user'] = user;
-        } catch (error) {
-          console.log('not found user');
-          return false;
         }
-      }
+        // eslint-disable-next-line no-empty
+      } catch {}
     }
     next();
   }
