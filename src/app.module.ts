@@ -11,9 +11,9 @@ import * as Joi from 'joi';
 
 import { UsersModule } from './users/users.module';
 import { JwtModule } from './jwt/jwt.module';
-import { User } from './users/user.entity';
 import { JwtMiddleware } from './jwt/jwt.middleware';
-import { AuthModule } from './auth/auth.module';
+import { EmailVerification } from './users/entities/email-verification.entity';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -42,7 +42,7 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User],
+      entities: [User, EmailVerification],
       synchronize: process.env.NODE_ENV === 'development',
     }),
     GraphQLModule.forRoot({

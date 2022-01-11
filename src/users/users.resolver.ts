@@ -9,7 +9,7 @@ import {
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { LoginInput, LoginOutput } from './dtos/login-dto';
 import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
 @Resolver(of => User)

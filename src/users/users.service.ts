@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { JwtService } from 'src/jwt/jwt.service';
 import { CreateAccountInput } from './dtos/create-account.dto';
 import { LoginInput } from './dtos/login-dto';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { EditProfileInput } from './dtos/edit-profile.dto';
 
 @Injectable()
