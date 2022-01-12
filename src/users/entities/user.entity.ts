@@ -7,8 +7,8 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import * as bcrypt from 'bcrypt';
-import { CoreEntity } from 'src/common/entities/core.entity';
 import { IsEmail, IsEnum, IsString } from 'class-validator';
+import { CoreEntity } from 'src/common/entities/core.entity';
 
 enum UserRole {
   Owner,

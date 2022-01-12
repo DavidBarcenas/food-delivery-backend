@@ -7,11 +7,14 @@ import { CreateAccountInput } from './dtos/create-account.dto';
 import { LoginInput } from './dtos/login-dto';
 import { User } from './entities/user.entity';
 import { EditProfileInput } from './dtos/edit-profile.dto';
+import { EmailVerification } from './entities/email-verification.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
+    @InjectRepository(EmailVerification)
+    private readonly emailVerification: Repository<EmailVerification>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -30,8 +33,12 @@ export class UsersService {
         };
       }
 
-      const newAccount = this.usersRepository.create({ email, password, role });
-      await this.usersRepository.save(newAccount);
+      const newUser = this.usersRepository.create({ email, password, role });
+      const user = await this.usersRepository.save(newUser);
+
+      const verifiedUser = this.emailVerification.create({ user });
+      await this.emailVerification.save(verifiedUser);
+
       return {
         ok: true,
       };
@@ -90,6 +97,10 @@ export class UsersService {
 
     if (email) {
       user.email = email;
+      user.emailVerified = false;
+
+      const varifiedUser = this.emailVerification.create({ user });
+      await this.emailVerification.save(varifiedUser);
     }
 
     if (password) {
