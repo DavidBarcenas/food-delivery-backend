@@ -55,7 +55,10 @@ export class UsersService {
     password,
   }: LoginInput): Promise<{ ok: boolean; error?: string; token?: string }> {
     try {
-      const user = await this.usersRepository.findOne({ email });
+      const user = await this.usersRepository.findOne(
+        { email },
+        { select: ['email', 'password'] },
+      );
       if (!user) {
         return {
           ok: false,
@@ -110,18 +113,25 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async verifyEmail(code: string): Promise<boolean> {
-    const verification = await this.emailVerification.findOne(
-      { code },
-      { relations: ['user'] },
-    );
+  async verifyEmail(code: string) {
+    try {
+      const verification = await this.emailVerification.findOne(
+        { code },
+        { relations: ['user'] },
+      );
 
-    if (verification) {
-      verification.user.emailVerified = true;
-      this.usersRepository.save(verification.user);
-      return true;
+      if (verification) {
+        verification.user.emailVerified = true;
+        this.usersRepository.save(verification.user);
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      return {
+        ok: false,
+        error,
+      };
     }
-
-    return false;
   }
 }
