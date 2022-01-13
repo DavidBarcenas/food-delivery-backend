@@ -99,8 +99,8 @@ export class UsersService {
       user.email = email;
       user.emailVerified = false;
 
-      const varifiedUser = this.emailVerification.create({ user });
-      await this.emailVerification.save(varifiedUser);
+      const verifiedUser = this.emailVerification.create({ user });
+      await this.emailVerification.save(verifiedUser);
     }
 
     if (password) {
@@ -108,5 +108,20 @@ export class UsersService {
     }
 
     return this.usersRepository.save(user);
+  }
+
+  async verifyEmail(code: string): Promise<boolean> {
+    const verification = await this.emailVerification.findOne(
+      { code },
+      { relations: ['user'] },
+    );
+
+    if (verification) {
+      verification.user.emailVerified = true;
+      this.usersRepository.save(verification.user);
+      return true;
+    }
+
+    return false;
   }
 }
