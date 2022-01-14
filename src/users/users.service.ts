@@ -128,7 +128,8 @@ export class UsersService {
 
       if (verification) {
         verification.user.emailVerified = true;
-        this.usersRepository.save(verification.user);
+        await this.usersRepository.save(verification.user);
+        await this.emailVerification.delete(verification.id);
         return { ok: true };
       }
       return { ok: false, error: 'Verification not found.' };

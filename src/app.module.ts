@@ -7,6 +7,8 @@ import {
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import * as Joi from 'joi';
 
 import { UsersModule } from './users/users.module';
@@ -49,6 +51,7 @@ import { User } from './users/entities/user.entity';
       autoSchemaFile: true,
       context: ({ req }) => ({ user: req['user'] }),
     }),
+    MailerModule.forRoot(),
     JwtModule.forRoot({ secretKey: process.env.SECRET_KEY }),
     UsersModule,
   ],
