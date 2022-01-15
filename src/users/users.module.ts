@@ -4,11 +4,11 @@ import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { EmailVerification } from './entities/email-verification.entity';
-import { MailModule } from 'src/mail/mail.module';
+import { MailService } from 'src/mail/mail.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, EmailVerification]), MailModule],
-  providers: [UsersResolver, UsersService],
+  imports: [TypeOrmModule.forFeature([User, EmailVerification])],
+  providers: [UsersResolver, UsersService, MailService],
   exports: [UsersService],
 })
 export class UsersModule {}

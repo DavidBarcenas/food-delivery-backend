@@ -14,6 +14,7 @@ import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { EmailVerification } from './users/entities/email-verification.entity';
 import { User } from './users/entities/user.entity';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -54,6 +55,21 @@ import { User } from './users/entities/user.entity';
       context: ({ req }) => ({ user: req['user'] }),
     }),
     JwtModule.forRoot({ secretKey: process.env.SECRET_KEY }),
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.MAIL_HOST,
+        port: parseInt(process.env.MAIL_PORT, 10),
+        ignoreTLS: false,
+        secure: true,
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASSWORD,
+        },
+      },
+      defaults: {
+        from: '"no-reply" <delivery@company.com>',
+      },
+    }),
     UsersModule,
   ],
   controllers: [],
