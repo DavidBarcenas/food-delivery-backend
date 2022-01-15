@@ -13,6 +13,7 @@ import {
 } from './dtos/create-account.dto';
 import { User } from './entities/user.entity';
 import { EmailVerification } from './entities/email-verification.entity';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UsersService {
@@ -21,6 +22,7 @@ export class UsersService {
     @InjectRepository(EmailVerification)
     private readonly emailVerification: Repository<EmailVerification>,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   async createAccount({
@@ -72,6 +74,7 @@ export class UsersService {
       }
 
       const token = this.jwtService.create({ email: user.email });
+      this.mailService.sendMail();
       return { ok: true, token };
     } catch (error) {
       return {

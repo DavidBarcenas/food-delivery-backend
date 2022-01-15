@@ -7,8 +7,6 @@ import {
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import * as Joi from 'joi';
 
 import { UsersModule } from './users/users.module';
@@ -35,6 +33,10 @@ import { User } from './users/entities/user.entity';
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
         SECRET_KEY: Joi.string().required(),
+        MAIL_HOST: Joi.string().required(),
+        MAIL_PORT: Joi.number().required(),
+        MAIL_USER: Joi.string().required(),
+        MAIL_PASSWORD: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -51,7 +53,6 @@ import { User } from './users/entities/user.entity';
       autoSchemaFile: true,
       context: ({ req }) => ({ user: req['user'] }),
     }),
-    MailerModule.forRoot(),
     JwtModule.forRoot({ secretKey: process.env.SECRET_KEY }),
     UsersModule,
   ],
