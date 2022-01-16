@@ -74,7 +74,6 @@ export class UsersService {
       }
 
       const token = this.jwtService.create({ email: user.email });
-      this.mailService.sendMail();
       return { ok: true, token };
     } catch (error) {
       return {

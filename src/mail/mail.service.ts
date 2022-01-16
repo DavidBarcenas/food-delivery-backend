@@ -5,7 +5,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  private buildEmail() {
+  private buildEmail(code: string) {
     return {
       to: 'David Barcenas <davidbarcenasmx@gmail.com>', // list of receivers
       from: 'Dev Company <devcompany@gmail.com>', // sender address
@@ -15,9 +15,9 @@ export class MailService {
     };
   }
 
-  sendMail() {
+  sendMail(code: string) {
     this.mailerService
-      .sendMail({ ...this.buildEmail() })
+      .sendMail({ ...this.buildEmail(code) })
       .then(() => console.log('EMAIL SENT'))
       .catch(error => console.log('EMAIL ERROR', error));
   }
