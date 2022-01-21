@@ -44,8 +44,8 @@ export class UsersService {
       const user = await this.usersRepository.save(newUser);
 
       const verifiedUser = this.emailVerification.create({ user });
-      await this.emailVerification.save(verifiedUser);
-
+      const verification = await this.emailVerification.save(verifiedUser);
+      this.mailService.sendMail(verification.code);
       return { ok: true };
     } catch (error) {
       return {
@@ -107,7 +107,8 @@ export class UsersService {
         user.emailVerified = false;
 
         const verifiedUser = this.emailVerification.create({ user });
-        await this.emailVerification.save(verifiedUser);
+        const verification = await this.emailVerification.save(verifiedUser);
+        this.mailService.sendMail(verification.code);
       }
 
       if (password) {
