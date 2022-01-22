@@ -18,6 +18,7 @@ import { EmailVerification } from './users/entities/email-verification.entity';
 import { User } from './users/entities/user.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { DatabaseModule } from './database/database.module';
+import { schema } from './schema-validation';
 
 @Module({
   imports: [
@@ -26,22 +27,7 @@ import { DatabaseModule } from './database/database.module';
       envFilePath:
         process.env.NODE_ENV === 'development' ? '.env.dev' : '.env.test',
       ignoreEnvFile: process.env.NODE_ENV === 'production',
-      validationSchema: Joi.object({
-        NODE_ENV: Joi.string()
-          .valid('development', 'production', 'test')
-          .default('development')
-          .required(),
-        DB_HOST: Joi.string().required(),
-        DB_PORT: Joi.number().required(),
-        DB_USER: Joi.string().required(),
-        DB_PASSWORD: Joi.string().required(),
-        DB_NAME: Joi.string().required(),
-        SECRET_KEY: Joi.string().required(),
-        MAIL_HOST: Joi.string().required(),
-        MAIL_PORT: Joi.number().required(),
-        MAIL_USER: Joi.string().required(),
-        MAIL_PASSWORD: Joi.string().required(),
-      }),
+      validationSchema: schema,
     }),
     DatabaseModule,
     GraphQLModule.forRoot({
