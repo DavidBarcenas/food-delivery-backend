@@ -6,26 +6,22 @@ import {
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import * as Joi from 'joi';
 import { join } from 'path';
 
 import { UsersModule } from './users/users.module';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
-import { EmailVerification } from './users/entities/email-verification.entity';
-import { User } from './users/entities/user.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { DatabaseModule } from './database/database.module';
-import { schema } from './schema-validation';
+import { schema } from './config/schema-validation';
+import { environments } from './config/environments';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath:
-        process.env.NODE_ENV === 'development' ? '.env.dev' : '.env.test',
+      envFilePath: environments[process.env.NODE_ENV] || '.env.dev',
       ignoreEnvFile: process.env.NODE_ENV === 'production',
       validationSchema: schema,
     }),
