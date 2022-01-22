@@ -17,6 +17,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
 import { EmailVerification } from './users/entities/email-verification.entity';
 import { User } from './users/entities/user.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -42,16 +43,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
         MAIL_PASSWORD: Joi.string().required(),
       }),
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT, 10),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      entities: [User, EmailVerification],
-      synchronize: process.env.NODE_ENV === 'development',
-    }),
+    DatabaseModule,
     GraphQLModule.forRoot({
       autoSchemaFile: true,
       context: ({ req }) => ({ user: req['user'] }),
@@ -62,7 +54,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
         host: process.env.MAIL_HOST,
         port: parseInt(process.env.MAIL_PORT, 10),
         ignoreTLS: false,
-        secure: false,
+        secure: true,
         auth: {
           user: process.env.MAIL_USER,
           pass: process.env.MAIL_PASSWORD,
@@ -80,6 +72,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       },
     }),
     UsersModule,
+    DatabaseModule,
   ],
   controllers: [],
   providers: [],
