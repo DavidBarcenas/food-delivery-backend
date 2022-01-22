@@ -9,6 +9,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './users/users.module';
+import { MailModule } from './mail/mail.module';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { environments } from './config/environments';
@@ -22,12 +23,13 @@ import { schema } from './config/schema-validation';
       ignoreEnvFile: process.env.NODE_ENV === 'production',
       validationSchema: schema,
     }),
-    DatabaseModule,
     GraphQLModule.forRoot({
       autoSchemaFile: true,
       context: ({ req }) => ({ user: req['user'] }),
     }),
     JwtModule.forRoot({ secretKey: process.env.SECRET_KEY }),
+    DatabaseModule,
+    MailModule,
     UsersModule,
   ],
   controllers: [],

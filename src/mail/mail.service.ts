@@ -7,15 +7,15 @@ export class MailService {
   constructor(private readonly mailerService: MailerService) {}
 
   private buildEmail(code: string) {
+    const url = `http://127.0.0.1:3000/confirm?code=${code}`;
     return {
       to: 'David Barcenas <davidbarcenasmx@gmail.com>', // list of receivers
       from: 'Delivery <devcompany@gmail.com>', // sender address
       subject: 'Confirm Delivery Account', // Subject line
       text: 'Email Verification', // plaintext body
-      template: join(__dirname, '/mail/templates/verify'),
+      template: 'confirmation',
       context: {
-        code: 'cf1a3f828287',
-        username: 'john doe',
+        verificationUrl: url,
       },
     };
   }
