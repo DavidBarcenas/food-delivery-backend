@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { join } from 'path';
 
 @Injectable()
 export class MailService {
@@ -9,10 +8,10 @@ export class MailService {
   private buildEmail(code: string) {
     const url = `http://127.0.0.1:3000/confirm?code=${code}`;
     return {
-      to: 'David Barcenas <davidbarcenasmx@gmail.com>', // list of receivers
-      from: 'Delivery <devcompany@gmail.com>', // sender address
-      subject: 'Confirm Delivery Account', // Subject line
-      text: 'Email Verification', // plaintext body
+      to: 'David Barcenas <davidbarcenasmx@gmail.com>',
+      from: 'Delivery <devcompany@gmail.com>',
+      subject: 'Confirm Delivery Account',
+      text: 'Email Verification',
       template: 'confirmation',
       context: {
         verificationUrl: url,
@@ -21,7 +20,6 @@ export class MailService {
   }
 
   sendMail(code: string) {
-    // console.log(process.cwd() + '/templates/verify.html');
     this.mailerService
       .sendMail({ ...this.buildEmail(code) })
       .then(() => console.log('EMAIL SENT'))
