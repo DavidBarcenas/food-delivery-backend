@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { JwtService } from 'src/jwt/jwt.service';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { LoginInput, LoginOutput } from './dtos/login-dto';
 import { VerifyEmailOutput } from './dtos/verify-email.dto';
@@ -14,6 +13,7 @@ import {
 import { User } from './entities/user.entity';
 import { EmailVerification } from './entities/email-verification.entity';
 import { MailService } from 'src/mail/mail.service';
+import { JwtService } from 'src/jwt/jwt.service';
 
 @Injectable()
 export class UsersService {
