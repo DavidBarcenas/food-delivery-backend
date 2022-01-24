@@ -45,7 +45,10 @@ export class UsersService {
 
       const verifiedUser = this.emailVerification.create({ user });
       const verification = await this.emailVerification.save(verifiedUser);
-      this.mailService.sendMail(verification.code);
+      await this.mailService.sendUserConfirmation(
+        verification.code,
+        user.email,
+      );
       return { ok: true };
     } catch (error) {
       return {
@@ -108,7 +111,10 @@ export class UsersService {
 
         const verifiedUser = this.emailVerification.create({ user });
         const verification = await this.emailVerification.save(verifiedUser);
-        this.mailService.sendMail(verification.code);
+        await this.mailService.sendUserConfirmation(
+          verification.code,
+          user.email,
+        );
       }
 
       if (password) {
