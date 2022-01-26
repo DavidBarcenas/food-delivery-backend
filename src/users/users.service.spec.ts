@@ -97,11 +97,12 @@ describe('UserService', () => {
   });
 
   describe('login', () => {
+    const loginArgs = {
+      email: 'test@mail.com|',
+      password: 'secret123',
+    };
+
     it('should fail if user does not exist', async () => {
-      const loginArgs = {
-        email: 'test@mail.com|',
-        password: 'secret123',
-      };
       usersRepository.findOne.mockResolvedValue(null);
       const result = await service.login(loginArgs);
       expect(usersRepository.findOne).toHaveBeenCalledTimes(1);
@@ -110,6 +111,19 @@ describe('UserService', () => {
         expect.any(Object),
       );
       expect(result).toEqual({ ok: false, error: 'User Not Found.' });
+    });
+
+    it('should fail if the password is wrong', async () => {
+      const mockedUser = {
+        id: 1,
+        checkPassword: jest.fn(() => Promise.resolve(false)),
+      };
+      usersRepository.findOne.mockResolvedValue(mockedUser);
+      const result = await service.login(loginArgs);
+      expect(result).toEqual({
+        ok: false,
+        error: 'The email or password is incorrect.',
+      });
     });
   });
 });
