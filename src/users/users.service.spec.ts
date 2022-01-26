@@ -86,5 +86,13 @@ describe('UserService', () => {
       expect(usersRepository.save).toHaveBeenCalledTimes(1);
       expect(usersRepository.save).toHaveBeenCalledWith(createAccountArgs);
     });
+
+    it('should fail on exception', async () => {
+      usersRepository.findOne.mockRejectedValue(
+        new Error('Has ocurred an error'),
+      );
+      const result = await service.createAccount(createAccountArgs);
+      expect(result).toEqual({ ok: false, error: "Couldn't create account" });
+    });
   });
 });
