@@ -14,7 +14,7 @@ const mockRepository = () => ({
 });
 
 const mockJwtService = {
-  create: jest.fn(),
+  create: jest.fn(() => 'signed-bearer-token'),
   verify: jest.fn(),
 };
 
@@ -26,6 +26,7 @@ type MockRepository<T> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
 describe('UserService', () => {
   let service: UsersService;
+  let jwtService: JwtService;
   let usersRepository: MockRepository<User>;
 
   beforeEach(async () => {
@@ -53,6 +54,7 @@ describe('UserService', () => {
 
     service = module.get<UsersService>(UsersService);
     usersRepository = module.get(getRepositoryToken(User));
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   it('shuld be defined', () => {
@@ -124,6 +126,19 @@ describe('UserService', () => {
         ok: false,
         error: 'The email or password is incorrect.',
       });
+    });
+
+    it('should return token if password correct', async () => {
+      const mockedUser = {
+        id: 1,
+        email: 'test@mail.com',
+        checkPassword: jest.fn(() => Promise.resolve(true)),
+      };
+      usersRepository.findOne.mockResolvedValue(mockedUser);
+      const result = await service.login(loginArgs);
+      expect(jwtService.create).toHaveBeenCalledTimes(1);
+      expect(jwtService.create).toHaveBeenCalledWith(expect.any(Object));
+      expect(result).toEqual({ ok: true, token: 'signed-bearer-token' });
     });
   });
 });
