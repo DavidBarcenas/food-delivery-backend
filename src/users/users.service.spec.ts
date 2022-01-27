@@ -140,5 +140,14 @@ describe('UserService', () => {
       expect(jwtService.create).toHaveBeenCalledWith(expect.any(Object));
       expect(result).toEqual({ ok: true, token: 'signed-bearer-token' });
     });
+
+    it('should failon exception', async () => {
+      usersRepository.findOne.mockRejectedValue(new Error());
+      const result = await service.login(loginArgs);
+      expect(result).toEqual({
+        ok: false,
+        error: 'Sorry. An error has occurred.',
+      });
+    });
   });
 });
