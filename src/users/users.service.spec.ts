@@ -159,5 +159,11 @@ describe('UserService', () => {
       const result = await service.findByEmail('test@mail.com');
       expect(result).toEqual({ ok: true, user: mockArgs });
     });
+
+    it('should fail if not user is found', async () => {
+      usersRepository.findOneOrFail.mockRejectedValue(new Error());
+      const result = await service.findByEmail('test@mail.com');
+      expect(result).toEqual({ ok: false, error: 'User Not Found' });
+    });
   });
 });
