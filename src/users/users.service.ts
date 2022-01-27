@@ -88,7 +88,7 @@ export class UsersService {
 
   async findByEmail(email: string): Promise<UserProfileOutput> {
     try {
-      const user = await this.usersRepository.findOne({ email });
+      const user = await this.usersRepository.findOneOrFail({ email });
 
       if (user) {
         return { ok: true, user };

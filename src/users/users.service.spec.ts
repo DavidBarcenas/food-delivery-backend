@@ -8,6 +8,7 @@ import { MailService } from 'src/mail/mail.service';
 import { Repository } from 'typeorm';
 
 const mockRepository = () => ({
+  findOneOrFail: jest.fn(),
   findOne: jest.fn(),
   create: jest.fn(),
   save: jest.fn(),
@@ -141,13 +142,22 @@ describe('UserService', () => {
       expect(result).toEqual({ ok: true, token: 'signed-bearer-token' });
     });
 
-    it('should failon exception', async () => {
+    it('should fail on exception', async () => {
       usersRepository.findOne.mockRejectedValue(new Error());
       const result = await service.login(loginArgs);
       expect(result).toEqual({
         ok: false,
         error: 'Sorry. An error has occurred.',
       });
+    });
+  });
+
+  describe('findById', () => {
+    const mockArgs = { email: 'test@mail.com' };
+    it('should find an existing user', async () => {
+      usersRepository.findOneOrFail.mockResolvedValue(mockArgs);
+      const result = await service.findByEmail('test@mail.com');
+      expect(result).toEqual({ ok: true, user: mockArgs });
     });
   });
 });
