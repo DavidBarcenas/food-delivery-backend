@@ -166,4 +166,24 @@ describe('UserService', () => {
       expect(result).toEqual({ ok: false, error: 'User Not Found' });
     });
   });
+
+  describe('editProfile', () => {
+    it('should change email', async () => {
+      const oldUser = {
+        email: 'test@mail.com',
+        verified: true,
+      };
+      const editProfileArgs = {
+        userId: 1,
+        input: { email: 'test@mail.com' },
+      };
+
+      usersRepository.findOne.mockResolvedValue(oldUser);
+      await service.editProfile(editProfileArgs.userId, editProfileArgs.input);
+      expect(usersRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(usersRepository.findOne).toHaveBeenCalledWith(
+        editProfileArgs.userId,
+      );
+    });
+  });
 });
