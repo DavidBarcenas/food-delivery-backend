@@ -21,6 +21,7 @@ const mockJwtService = {
 
 const mockMailService = {
   emailVerification: jest.fn(),
+  sendUserConfirmation: jest.fn(),
 };
 
 type MockRepository<T> = Partial<Record<keyof Repository<T>, jest.Mock>>;
@@ -28,7 +29,9 @@ type MockRepository<T> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 describe('UserService', () => {
   let service: UsersService;
   let jwtService: JwtService;
+  let mailService: MailService;
   let usersRepository: MockRepository<User>;
+  let emailVerificationRepository: MockRepository<EmailVerification>;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -54,8 +57,12 @@ describe('UserService', () => {
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    usersRepository = module.get(getRepositoryToken(User));
     jwtService = module.get<JwtService>(JwtService);
+    mailService = module.get<MailService>(MailService);
+    usersRepository = module.get(getRepositoryToken(User));
+    emailVerificationRepository = module.get(
+      getRepositoryToken(EmailVerification),
+    );
   });
 
   it('shuld be defined', () => {
@@ -171,18 +178,39 @@ describe('UserService', () => {
     it('should change email', async () => {
       const oldUser = {
         email: 'test@mail.com',
-        verified: true,
+        emailVerified: true,
       };
       const editProfileArgs = {
         userId: 1,
         input: { email: 'test@mail.com' },
       };
-
+      const newVerification = {
+        code: 'code',
+      };
+      const newUser = {
+        email: editProfileArgs.input.email,
+        emailVerified: false,
+      };
       usersRepository.findOne.mockResolvedValue(oldUser);
+      emailVerificationRepository.create.mockReturnValue(newVerification);
+      emailVerificationRepository.save.mockReturnValue(newVerification);
+
       await service.editProfile(editProfileArgs.userId, editProfileArgs.input);
       expect(usersRepository.findOne).toHaveBeenCalledTimes(1);
       expect(usersRepository.findOne).toHaveBeenCalledWith(
         editProfileArgs.userId,
+      );
+
+      expect(emailVerificationRepository.create).toHaveBeenCalledWith({
+        user: newUser,
+      });
+      expect(emailVerificationRepository.save).toHaveBeenCalledWith(
+        newVerification,
+      );
+
+      expect(mailService.sendUserConfirmation).toHaveBeenCalledWith(
+        newVerification.code,
+        newUser.email,
       );
     });
   });
