@@ -14,15 +14,15 @@ const mockRepository = () => ({
   save: jest.fn(),
 });
 
-const mockJwtService = {
+const mockJwtService = () => ({
   create: jest.fn(() => 'signed-bearer-token'),
   verify: jest.fn(),
-};
+});
 
-const mockMailService = {
+const mockMailService = () => ({
   emailVerification: jest.fn(),
   sendUserConfirmation: jest.fn(),
-};
+});
 
 type MockRepository<T> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
@@ -47,11 +47,11 @@ describe('UserService', () => {
         },
         {
           provide: JwtService,
-          useValue: mockJwtService,
+          useValue: mockJwtService(),
         },
         {
           provide: MailService,
-          useValue: mockMailService,
+          useValue: mockMailService(),
         },
       ],
     }).compile();
@@ -212,6 +212,23 @@ describe('UserService', () => {
         newVerification.code,
         newUser.email,
       );
+    });
+
+    it('should change password', async () => {
+      const editProfileArgs = {
+        userId: 1,
+        input: { password: 'new-password' },
+      };
+      usersRepository.findOne.mockResolvedValue({
+        password: 'old',
+      });
+      const result = await service.editProfile(
+        editProfileArgs.userId,
+        editProfileArgs.input,
+      );
+      expect(usersRepository.save).toHaveBeenCalledTimes(1);
+      expect(usersRepository.save).toHaveBeenCalledWith(editProfileArgs.input);
+      expect(result).toEqual({ ok: true });
     });
   });
 });
