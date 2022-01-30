@@ -160,11 +160,11 @@ describe('UserService', () => {
   });
 
   describe('findById', () => {
-    const mockArgs = { email: 'test@mail.com' };
+    const findByArgs = { email: 'test@mail.com' };
     it('should find an existing user', async () => {
-      usersRepository.findOneOrFail.mockResolvedValue(mockArgs);
+      usersRepository.findOneOrFail.mockResolvedValue(findByArgs);
       const result = await service.findByEmail('test@mail.com');
-      expect(result).toEqual({ ok: true, user: mockArgs });
+      expect(result).toEqual({ ok: true, user: findByArgs });
     });
 
     it('should fail if not user is found', async () => {
