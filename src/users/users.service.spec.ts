@@ -11,6 +11,7 @@ const mockRepository = () => ({
   findOneOrFail: jest.fn(),
   findOne: jest.fn(),
   create: jest.fn(),
+  delete: jest.fn(),
   save: jest.fn(),
 });
 
@@ -236,5 +237,39 @@ describe('UserService', () => {
       const result = await service.editProfile(1, { email: '12' });
       expect(result).toEqual({ ok: false, error: 'Could not update profile.' });
     });
+  });
+
+  describe('verifyEmail', () => {
+    it('should verify email', async () => {
+      const mockedVerification = {
+        user: {
+          emailVerified: false,
+        },
+        id: 1,
+      };
+      emailVerificationRepository.findOne.mockResolvedValue(mockedVerification);
+
+      const result = await service.verifyEmail('');
+
+      expect(emailVerificationRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(emailVerificationRepository.findOne).toHaveBeenCalledWith(
+        expect.any(Object),
+        expect.any(Object),
+      );
+
+      expect(usersRepository.save).toHaveBeenCalledTimes(1);
+      expect(usersRepository.save).toHaveBeenCalledWith({
+        emailVerified: true,
+      });
+
+      expect(emailVerificationRepository.delete).toHaveBeenCalledTimes(1);
+      expect(emailVerificationRepository.delete).toHaveBeenCalledWith(
+        mockedVerification.id,
+      );
+
+      expect(result).toEqual({ ok: true });
+    });
+    it.todo('should fail on verification not found');
+    it.todo('should fail on exception');
   });
 });
