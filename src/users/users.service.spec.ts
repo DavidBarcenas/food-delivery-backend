@@ -269,7 +269,17 @@ describe('UserService', () => {
 
       expect(result).toEqual({ ok: true });
     });
-    it.todo('should fail on verification not found');
-    it.todo('should fail on exception');
+
+    it('should fail on verification not found', async () => {
+      emailVerificationRepository.findOne.mockResolvedValue(undefined);
+      const result = await service.verifyEmail('');
+      expect(result).toEqual({ ok: false, error: 'Verification not found.' });
+    });
+
+    it('should fail on exception', async () => {
+      emailVerificationRepository.findOne.mockRejectedValue(new Error());
+      const result = await service.verifyEmail('');
+      expect(result).toEqual({ ok: false, error: 'Could not verify email.' });
+    });
   });
 });
