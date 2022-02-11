@@ -19,7 +19,7 @@ export class MailService {
         },
       });
     } catch (error) {
-      console.error('Email Error', error);
+      console.error('Email Error');
     }
   }
 }
