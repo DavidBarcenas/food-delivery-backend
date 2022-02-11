@@ -89,13 +89,39 @@ describe('UserService', () => {
     });
 
     it('should create a new user', async () => {
-      usersRepository.findOne.mockResolvedValue(undefined);
+      usersRepository.findOne.mockResolvedValue(null);
       usersRepository.create.mockReturnValue(createAccountArgs);
-      await service.createAccount(createAccountArgs);
+      usersRepository.save.mockResolvedValue(createAccountArgs);
+      emailVerificationRepository.create.mockReturnValue({
+        user: createAccountArgs,
+      });
+      emailVerificationRepository.save.mockResolvedValue({ code: 'code' });
+
+      const result = await service.createAccount(createAccountArgs);
+
       expect(usersRepository.create).toHaveBeenCalledTimes(1);
       expect(usersRepository.create).toHaveBeenCalledWith(createAccountArgs);
+
       expect(usersRepository.save).toHaveBeenCalledTimes(1);
       expect(usersRepository.save).toHaveBeenCalledWith(createAccountArgs);
+
+      expect(emailVerificationRepository.create).toHaveBeenCalledTimes(1);
+      expect(emailVerificationRepository.create).toHaveBeenCalledWith({
+        user: createAccountArgs,
+      });
+
+      expect(emailVerificationRepository.save).toHaveBeenCalledTimes(1);
+      expect(emailVerificationRepository.save).toHaveBeenCalledWith({
+        user: createAccountArgs,
+      });
+
+      expect(mailService.sendUserConfirmation).toHaveBeenCalledTimes(1);
+      expect(mailService.sendUserConfirmation).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.any(String),
+      );
+
+      expect(result).toEqual({ ok: true });
     });
 
     it('should fail on exception', async () => {
