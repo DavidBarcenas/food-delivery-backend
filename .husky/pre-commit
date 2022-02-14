@@ -8,7 +8,9 @@
 npx concurrently \
   --kill-others-on-fail \
   --prefix "[{name}]" \
-  --names "lint,typecheck" \
+  --names "test,lint,typecheck,build" \
   --prefix-colors "bgRed.bold,bgGreen.bold,bgBlue.bold,bgMagenta.bold" \
+    "yarn run test --watch=false" \
     "yarn run lint" \
     "yarn run typecheck" \
+    "yarn run build" \
