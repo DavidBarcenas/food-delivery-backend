@@ -16,7 +16,7 @@ import { User } from '../users/entities/user.entity';
           password: config.get('DB_PASSWORD'),
           database: config.get('DB_NAME'),
           entities: [User, EmailVerification],
-          synchronize: config.get('NODE_ENV') === 'development',
+          synchronize: config.get('NODE_ENV') !== 'production',
         };
       },
       inject: [ConfigService],
