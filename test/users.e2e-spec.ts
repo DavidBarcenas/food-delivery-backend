@@ -1,10 +1,12 @@
 import * as request from 'supertest';
 
+import { Repository, getConnection } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AppModule } from '../src/app.module';
 import { INestApplication } from '@nestjs/common';
-import { getConnection } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { getRepositoryToken } from '@nestjs/typeorm';
 
 const GRAPHQL_ENDPOINT = '/graphql';
 
@@ -15,6 +17,7 @@ const testUser = {
 
 describe('UserModule (e2e)', () => {
   let app: INestApplication;
+  let usersRepository: Repository<User>;
   let token: string;
 
   beforeAll(async () => {
@@ -23,6 +26,7 @@ describe('UserModule (e2e)', () => {
     }).compile();
 
     app = module.createNestApplication();
+    usersRepository = module.get<Repository<User>>(getRepositoryToken(User));
     await app.init();
   });
 
@@ -136,6 +140,42 @@ describe('UserModule (e2e)', () => {
           expect(res.body.data.login.token).toBeNull();
         });
     });
+  });
+
+  describe('profile', () => {
+    let userEmail: string;
+    beforeEach(async () => {
+      const [user] = await usersRepository.find();
+      userEmail = user.email;
+    });
+
+    it("should see a user's", () => {
+      return request(app.getHttpServer())
+        .post(GRAPHQL_ENDPOINT)
+        .set('X-JWT', token)
+        .send({
+          query: `
+          query {
+            userProfile(email: "davee@mail.com") {
+              ok
+              error
+              user {
+                email
+              }
+            }
+          }
+          `,
+        })
+        .expect(200)
+        .expect(res => {
+          const { ok, error, user } = res.body.data.userProfile;
+          expect(ok).toBeTruthy();
+          expect(error).toBeFalsy();
+          expect(user.email).toBe(userEmail);
+        });
+    });
+
+    it.todo('should not find a profile');
   });
 
   it.todo('findByEmail');
