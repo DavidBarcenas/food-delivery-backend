@@ -7,6 +7,7 @@ import {AppModule} from '../src/app.module';
 import {INestApplication} from '@nestjs/common';
 import {User} from 'src/users/entities/user.entity';
 import {getRepositoryToken} from '@nestjs/typeorm';
+import {EmailVerification} from 'src/users/entities/email-verification.entity';
 
 const GRAPHQL_ENDPOINT = '/graphql';
 
@@ -18,6 +19,7 @@ const testUser = {
 describe('UserModule (e2e)', () => {
   let app: INestApplication;
   let usersRepository: Repository<User>;
+  let emailVerificationRepository: Repository<EmailVerification>;
   let token: string;
 
   beforeAll(async () => {
@@ -27,6 +29,9 @@ describe('UserModule (e2e)', () => {
 
     app = module.createNestApplication();
     usersRepository = module.get<Repository<User>>(getRepositoryToken(User));
+    emailVerificationRepository = module.get<Repository<EmailVerification>>(
+      getRepositoryToken(EmailVerification),
+    );
     await app.init();
   });
 
@@ -228,5 +233,56 @@ describe('UserModule (e2e)', () => {
     });
   });
 
-  it.todo('verifyEmail');
+  describe('verifyEmail', () => {
+    let verificationCode: string;
+    beforeAll(async () => {
+      const [verification] = await emailVerificationRepository.find();
+      verificationCode = verification.code;
+    });
+    it('should verify email', () => {
+      return request(app.getHttpServer())
+        .post(GRAPHQL_ENDPOINT)
+        .send({
+          query: `
+            mutation {
+              verifyEmail(input: {
+                code: "${verificationCode}"
+              }) {
+                ok
+                error
+              }
+            }
+          `,
+        })
+        .expect(200)
+        .expect(res => {
+          const {ok, error} = res.body.data.verifyEmail;
+          expect(ok).toBeTruthy();
+          expect(error).toBeNull();
+        });
+    });
+
+    it('should fail on verification code not found', () => {
+      return request(app.getHttpServer())
+        .post(GRAPHQL_ENDPOINT)
+        .send({
+          query: `
+            mutation {
+              verifyEmail(input: {
+                code: "WRONG_CODE"
+              }) {
+                ok
+                error
+              }
+            }
+          `,
+        })
+        .expect(200)
+        .expect(res => {
+          const {ok, error} = res.body.data.verifyEmail;
+          expect(ok).toBeFalsy();
+          expect(error).toBe('Verification not found.');
+        });
+    });
+  });
 });
