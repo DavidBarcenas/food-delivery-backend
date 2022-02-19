@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmailVerification } from '../users/entities/email-verification.entity';
-import { User } from '../users/entities/user.entity';
+import {Module} from '@nestjs/common';
+import {ConfigService} from '@nestjs/config';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {EmailVerification} from '../users/entities/email-verification.entity';
+import {User} from '../users/entities/user.entity';
 
 @Module({
   imports: [

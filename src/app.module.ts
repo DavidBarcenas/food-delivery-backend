@@ -4,16 +4,16 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { GraphQLModule } from '@nestjs/graphql';
+import {ConfigModule} from '@nestjs/config';
+import {GraphQLModule} from '@nestjs/graphql';
 
-import { DatabaseModule } from './database/database.module';
-import { UsersModule } from './users/users.module';
-import { MailModule } from './mail/mail.module';
-import { JwtModule } from './jwt/jwt.module';
-import { JwtMiddleware } from './jwt/jwt.middleware';
-import { environments } from './config/environments';
-import { schema } from './config/schema-validation';
+import {DatabaseModule} from './database/database.module';
+import {UsersModule} from './users/users.module';
+import {MailModule} from './mail/mail.module';
+import {JwtModule} from './jwt/jwt.module';
+import {JwtMiddleware} from './jwt/jwt.middleware';
+import {environments} from './config/environments';
+import {schema} from './config/schema-validation';
 
 @Module({
   imports: [
@@ -25,9 +25,9 @@ import { schema } from './config/schema-validation';
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
-      context: ({ req }) => ({ user: req['user'] }),
+      context: ({req}) => ({user: req['user']}),
     }),
-    JwtModule.forRoot({ secretKey: process.env.SECRET_KEY }),
+    JwtModule.forRoot({secretKey: process.env.SECRET_KEY}),
     DatabaseModule,
     MailModule,
     UsersModule,

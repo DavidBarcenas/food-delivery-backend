@@ -1,14 +1,9 @@
-import { InternalServerErrorException } from '@nestjs/common';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
-import {
-  Field,
-  InputType,
-  ObjectType,
-  registerEnumType,
-} from '@nestjs/graphql';
+import {InternalServerErrorException} from '@nestjs/common';
+import {BeforeInsert, BeforeUpdate, Column, Entity} from 'typeorm';
+import {Field, InputType, ObjectType, registerEnumType} from '@nestjs/graphql';
 import * as bcrypt from 'bcrypt';
-import { IsEmail, IsEnum, IsString } from 'class-validator';
-import { CoreEntity } from 'src/common/entities/core.entity';
+import {IsEmail, IsEnum, IsString} from 'class-validator';
+import {CoreEntity} from 'src/common/entities/core.entity';
 
 enum UserRole {
   Owner,
@@ -16,29 +11,29 @@ enum UserRole {
   Delivery,
 }
 
-registerEnumType(UserRole, { name: 'UserRole' });
+registerEnumType(UserRole, {name: 'UserRole'});
 
-@InputType({ isAbstract: true })
+@InputType({isAbstract: true})
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
   @Field(type => String)
-  @Column()
+  @Column({unique: true})
   @IsEmail()
   email: string;
 
   @Field(type => String)
-  @Column({ select: false })
+  @Column({select: false})
   @IsString()
   password: string;
 
   @Field(type => UserRole)
-  @Column({ type: 'enum', enum: UserRole })
+  @Column({type: 'enum', enum: UserRole})
   @IsEnum(UserRole)
   role: UserRole;
 
   @Field(type => Boolean)
-  @Column({ default: false })
+  @Column({default: false})
   emailVerified: boolean;
 
   @BeforeInsert()

@@ -1,12 +1,12 @@
 import * as request from 'supertest';
 
-import { Repository, getConnection } from 'typeorm';
-import { Test, TestingModule } from '@nestjs/testing';
+import {Repository, getConnection} from 'typeorm';
+import {Test, TestingModule} from '@nestjs/testing';
 
-import { AppModule } from '../src/app.module';
-import { INestApplication } from '@nestjs/common';
-import { User } from 'src/users/entities/user.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import {AppModule} from '../src/app.module';
+import {INestApplication} from '@nestjs/common';
+import {User} from 'src/users/entities/user.entity';
+import {getRepositoryToken} from '@nestjs/typeorm';
 
 const GRAPHQL_ENDPOINT = '/graphql';
 
@@ -168,7 +168,7 @@ describe('UserModule (e2e)', () => {
         })
         .expect(200)
         .expect(res => {
-          const { ok, error, user } = res.body.data.userProfile;
+          const {ok, error, user} = res.body.data.userProfile;
           expect(ok).toBeTruthy();
           expect(error).toBeNull();
           expect(user.email).toBe(userEmail);
@@ -194,7 +194,7 @@ describe('UserModule (e2e)', () => {
         })
         .expect(200)
         .expect(res => {
-          const { ok, error, user } = res.body.data.userProfile;
+          const {ok, error, user} = res.body.data.userProfile;
           expect(ok).toBeFalsy();
           expect(error).toBe('User Not Found');
           expect(user).toBeNull();
@@ -202,7 +202,31 @@ describe('UserModule (e2e)', () => {
     });
   });
 
-  it.todo('findByEmail');
-  it.todo('editProfile');
+  describe('editProfile', () => {
+    it('should change email', () => {
+      return request(app.getHttpServer())
+        .post(GRAPHQL_ENDPOINT)
+        .set('X-JWT', token)
+        .send({
+          query: `
+          mutation {
+            editProfile(input: {
+              email: "davee@gmail.com"
+            }) {
+              ok
+              error
+            }
+          }
+        `,
+        })
+        .expect(200)
+        .expect(res => {
+          const {ok, error} = res.body.data.editProfile;
+          expect(ok).toBeTruthy();
+          expect(error).toBeNull();
+        });
+    });
+  });
+
   it.todo('verifyEmail');
 });

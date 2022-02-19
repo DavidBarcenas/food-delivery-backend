@@ -1,7 +1,7 @@
-import { Test } from '@nestjs/testing';
+import {Test} from '@nestjs/testing';
 import * as jwt from 'jsonwebtoken';
-import { CONFIG_OPTIONS } from 'src/common/common.constants';
-import { JwtService } from 'src/jwt/jwt.service';
+import {CONFIG_OPTIONS} from 'src/common/common.constants';
+import {JwtService} from 'src/jwt/jwt.service';
 
 const TEST_KEY = 'testKey';
 const USER_EMAIL = 'bs.foo@mail.com';
@@ -9,7 +9,7 @@ const USER_EMAIL = 'bs.foo@mail.com';
 jest.mock('jsonwebtoken', () => {
   return {
     sign: jest.fn(() => 'TOKEN'),
-    verify: jest.fn(() => ({ email: USER_EMAIL })),
+    verify: jest.fn(() => ({email: USER_EMAIL})),
   };
 });
 
@@ -22,7 +22,7 @@ describe('JwtService', () => {
         JwtService,
         {
           provide: CONFIG_OPTIONS,
-          useValue: { secretKey: TEST_KEY },
+          useValue: {secretKey: TEST_KEY},
         },
       ],
     }).compile();
@@ -35,10 +35,10 @@ describe('JwtService', () => {
 
   describe('sign', () => {
     it('should return a signed token', () => {
-      const token = service.create({ email: USER_EMAIL });
+      const token = service.create({email: USER_EMAIL});
       expect(typeof token).toBe('string');
       expect(jwt.sign).toHaveBeenCalledTimes(1);
-      expect(jwt.sign).toHaveBeenCalledWith({ email: USER_EMAIL }, TEST_KEY);
+      expect(jwt.sign).toHaveBeenCalledWith({email: USER_EMAIL}, TEST_KEY);
     });
   });
 
@@ -46,7 +46,7 @@ describe('JwtService', () => {
     it('should return the decode token', () => {
       const TOKEN = 'token';
       const verifyToken = service.verify(TOKEN);
-      expect(verifyToken).toEqual({ email: USER_EMAIL });
+      expect(verifyToken).toEqual({email: USER_EMAIL});
       expect(jwt.verify).toHaveBeenCalledTimes(1);
       expect(jwt.verify).toHaveBeenCalledWith(TOKEN, TEST_KEY);
     });

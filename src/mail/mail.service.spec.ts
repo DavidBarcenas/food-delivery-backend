@@ -1,6 +1,6 @@
-import { MailerService } from '@nestjs-modules/mailer';
-import { Test } from '@nestjs/testing';
-import { MailService } from './mail.service';
+import {MailerService} from '@nestjs-modules/mailer';
+import {Test} from '@nestjs/testing';
+import {MailService} from './mail.service';
 
 const USER_EMAIL = 'bs.foo@mail.com';
 

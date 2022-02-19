@@ -1,13 +1,13 @@
-import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { LoginInput, LoginOutput } from './dtos/login-dto';
-import { AuthUser } from 'src/auth/auth-user.decorator';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
-import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
-import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto';
-import { UsersService } from './users.service';
-import { User } from './entities/user.entity';
+import {UseGuards} from '@nestjs/common';
+import {Args, Mutation, Query, Resolver} from '@nestjs/graphql';
+import {LoginInput, LoginOutput} from './dtos/login-dto';
+import {AuthUser} from 'src/auth/auth-user.decorator';
+import {AuthGuard} from 'src/auth/auth.guard';
+import {EditProfileInput, EditProfileOutput} from './dtos/edit-profile.dto';
+import {UserProfileInput, UserProfileOutput} from './dtos/user-profile.dto';
+import {VerifyEmailInput, VerifyEmailOutput} from './dtos/verify-email.dto';
+import {UsersService} from './users.service';
+import {User} from './entities/user.entity';
 import {
   CreateAccountInput,
   CreateAccountOutput,
