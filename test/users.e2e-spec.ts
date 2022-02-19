@@ -170,12 +170,36 @@ describe('UserModule (e2e)', () => {
         .expect(res => {
           const { ok, error, user } = res.body.data.userProfile;
           expect(ok).toBeTruthy();
-          expect(error).toBeFalsy();
+          expect(error).toBeNull();
           expect(user.email).toBe(userEmail);
         });
     });
 
-    it.todo('should not find a profile');
+    it('should not find a profile', () => {
+      return request(app.getHttpServer())
+        .post(GRAPHQL_ENDPOINT)
+        .set('X-JWT', token)
+        .send({
+          query: `
+          query {
+            userProfile(email: "test@mail.com") {
+              ok
+              error
+              user {
+                email
+              }
+            }
+          }
+          `,
+        })
+        .expect(200)
+        .expect(res => {
+          const { ok, error, user } = res.body.data.userProfile;
+          expect(ok).toBeFalsy();
+          expect(error).toBe('User Not Found');
+          expect(user).toBeNull();
+        });
+    });
   });
 
   it.todo('findByEmail');
