@@ -1,30 +1,28 @@
 import {Field, ObjectType} from '@nestjs/graphql';
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
-import {IsBoolean, IsNumber, IsOptional, IsString, Length} from 'class-validator';
+import {Column, Entity, ManyToOne} from 'typeorm';
+import {IsString} from 'class-validator';
+import {CoreEntity} from 'src/common/entities/core.entity';
+import {Category} from './category.entity';
 
 @ObjectType()
 @Entity()
-export class Restaurant {
-  @Field(type => Number)
-  @PrimaryGeneratedColumn()
-  @IsNumber()
-  id: number;
-
+export class Restaurant extends CoreEntity {
   @Field(type => String)
   @Column()
   @IsString()
-  @Length(5)
   name: string;
 
-  @Field(type => Boolean, {defaultValue: true})
-  @Column({default: true})
-  @IsBoolean()
-  @IsOptional()
-  isVegan: string;
+  @Field(type => String)
+  @Column()
+  @IsString()
+  coverImage: string;
 
   @Field(type => String)
   @Column()
   @IsString()
-  @Length(5)
   address: string;
+
+  @ManyToOne(type => Category, category => category.restaurants)
+  @Field(type => Category)
+  category: Category;
 }
