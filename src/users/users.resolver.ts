@@ -8,10 +8,7 @@ import {UserProfileInput, UserProfileOutput} from './dtos/user-profile.dto';
 import {VerifyEmailInput, VerifyEmailOutput} from './dtos/verify-email.dto';
 import {UsersService} from './users.service';
 import {User} from './entities/user.entity';
-import {
-  CreateAccountInput,
-  CreateAccountOutput,
-} from './dtos/create-account.dto';
+import {CreateAccountInput, CreateAccountOutput} from './dtos/create-account.dto';
 
 @Resolver(of => User)
 export class UsersResolver {
@@ -37,9 +34,7 @@ export class UsersResolver {
 
   @Query(returns => UserProfileOutput)
   @UseGuards(AuthGuard)
-  userProfile(
-    @Args() userProfileInput: UserProfileInput,
-  ): Promise<UserProfileOutput> {
+  userProfile(@Args() userProfileInput: UserProfileInput): Promise<UserProfileOutput> {
     return this.usersService.findByEmail(userProfileInput.email);
   }
 
@@ -53,9 +48,7 @@ export class UsersResolver {
   }
 
   @Mutation(returns => VerifyEmailOutput)
-  verifyEmail(
-    @Args('input') verifyEmailInput: VerifyEmailInput,
-  ): Promise<VerifyEmailOutput> {
+  verifyEmail(@Args('input') verifyEmailInput: VerifyEmailInput): Promise<VerifyEmailOutput> {
     return this.usersService.verifyEmail(verifyEmailInput.code);
   }
 }

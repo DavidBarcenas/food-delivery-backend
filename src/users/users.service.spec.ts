@@ -61,9 +61,7 @@ describe('UserService', () => {
     jwtService = module.get<JwtService>(JwtService);
     mailService = module.get<MailService>(MailService);
     usersRepository = module.get(getRepositoryToken(User));
-    emailVerificationRepository = module.get(
-      getRepositoryToken(EmailVerification),
-    );
+    emailVerificationRepository = module.get(getRepositoryToken(EmailVerification));
   });
 
   it('shuld be defined', () => {
@@ -125,9 +123,7 @@ describe('UserService', () => {
     });
 
     it('should fail on exception', async () => {
-      usersRepository.findOne.mockRejectedValue(
-        new Error('Has ocurred an error'),
-      );
+      usersRepository.findOne.mockRejectedValue(new Error('Has ocurred an error'));
       const result = await service.createAccount(createAccountArgs);
       expect(result).toEqual({ok: false, error: "Couldn't create account"});
     });
@@ -143,10 +139,7 @@ describe('UserService', () => {
       usersRepository.findOne.mockResolvedValue(null);
       const result = await service.login(loginArgs);
       expect(usersRepository.findOne).toHaveBeenCalledTimes(1);
-      expect(usersRepository.findOne).toHaveBeenCalledWith(
-        expect.any(Object),
-        expect.any(Object),
-      );
+      expect(usersRepository.findOne).toHaveBeenCalledWith(expect.any(Object), expect.any(Object));
       expect(result).toEqual({ok: false, error: 'User Not Found.'});
     });
 
@@ -224,16 +217,12 @@ describe('UserService', () => {
 
       await service.editProfile(editProfileArgs.userId, editProfileArgs.input);
       expect(usersRepository.findOne).toHaveBeenCalledTimes(1);
-      expect(usersRepository.findOne).toHaveBeenCalledWith(
-        editProfileArgs.userId,
-      );
+      expect(usersRepository.findOne).toHaveBeenCalledWith(editProfileArgs.userId);
 
       expect(emailVerificationRepository.create).toHaveBeenCalledWith({
         user: newUser,
       });
-      expect(emailVerificationRepository.save).toHaveBeenCalledWith(
-        newVerification,
-      );
+      expect(emailVerificationRepository.save).toHaveBeenCalledWith(newVerification);
 
       expect(mailService.sendUserConfirmation).toHaveBeenCalledWith(
         newVerification.code,
@@ -249,10 +238,7 @@ describe('UserService', () => {
       usersRepository.findOne.mockResolvedValue({
         password: 'old',
       });
-      const result = await service.editProfile(
-        editProfileArgs.userId,
-        editProfileArgs.input,
-      );
+      const result = await service.editProfile(editProfileArgs.userId, editProfileArgs.input);
       expect(usersRepository.save).toHaveBeenCalledTimes(1);
       expect(usersRepository.save).toHaveBeenCalledWith(editProfileArgs.input);
       expect(result).toEqual({ok: true});
@@ -289,9 +275,7 @@ describe('UserService', () => {
       });
 
       expect(emailVerificationRepository.delete).toHaveBeenCalledTimes(1);
-      expect(emailVerificationRepository.delete).toHaveBeenCalledWith(
-        mockedVerification.id,
-      );
+      expect(emailVerificationRepository.delete).toHaveBeenCalledWith(mockedVerification.id);
 
       expect(result).toEqual({ok: true});
     });

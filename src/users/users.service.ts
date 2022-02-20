@@ -6,10 +6,7 @@ import {EditProfileInput, EditProfileOutput} from './dtos/edit-profile.dto';
 import {LoginInput, LoginOutput} from './dtos/login-dto';
 import {VerifyEmailOutput} from './dtos/verify-email.dto';
 import {UserProfileOutput} from './dtos/user-profile.dto';
-import {
-  CreateAccountInput,
-  CreateAccountOutput,
-} from './dtos/create-account.dto';
+import {CreateAccountInput, CreateAccountOutput} from './dtos/create-account.dto';
 import {User} from './entities/user.entity';
 import {EmailVerification} from './entities/email-verification.entity';
 import {MailService} from 'src/mail/mail.service';
@@ -25,11 +22,7 @@ export class UsersService {
     private readonly mailService: MailService,
   ) {}
 
-  async createAccount({
-    email,
-    password,
-    role,
-  }: CreateAccountInput): Promise<CreateAccountOutput> {
+  async createAccount({email, password, role}: CreateAccountInput): Promise<CreateAccountOutput> {
     try {
       const accountExists = await this.usersRepository.findOne({email});
 
@@ -45,10 +38,7 @@ export class UsersService {
 
       const verifiedUser = this.emailVerification.create({user});
       const verification = await this.emailVerification.save(verifiedUser);
-      await this.mailService.sendUserConfirmation(
-        verification.code,
-        user.email,
-      );
+      await this.mailService.sendUserConfirmation(verification.code, user.email);
       return {ok: true};
     } catch (error) {
       return {
@@ -60,10 +50,7 @@ export class UsersService {
 
   async login({email, password}: LoginInput): Promise<LoginOutput> {
     try {
-      const user = await this.usersRepository.findOne(
-        {email},
-        {select: ['email', 'password']},
-      );
+      const user = await this.usersRepository.findOne({email}, {select: ['email', 'password']});
       if (!user) {
         return {ok: false, error: 'User Not Found.'};
       }
@@ -113,10 +100,7 @@ export class UsersService {
 
         const verifiedUser = this.emailVerification.create({user});
         const verification = await this.emailVerification.save(verifiedUser);
-        await this.mailService.sendUserConfirmation(
-          verification.code,
-          user.email,
-        );
+        await this.mailService.sendUserConfirmation(verification.code, user.email);
       }
 
       if (password) {
@@ -132,10 +116,7 @@ export class UsersService {
 
   async verifyEmail(code: string): Promise<VerifyEmailOutput> {
     try {
-      const verification = await this.emailVerification.findOne(
-        {code},
-        {relations: ['user']},
-      );
+      const verification = await this.emailVerification.findOne({code}, {relations: ['user']});
 
       if (verification) {
         verification.user.emailVerified = true;
