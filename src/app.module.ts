@@ -9,6 +9,7 @@ import {JwtModule} from './jwt/jwt.module';
 import {JwtMiddleware} from './jwt/jwt.middleware';
 import {environments} from './config/environments';
 import {schema} from './config/schema-validation';
+import {RestaurantsModule} from './restaurants/restaurants.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import {schema} from './config/schema-validation';
     DatabaseModule,
     MailModule,
     UsersModule,
+    RestaurantsModule,
   ],
   controllers: [],
   providers: [],
