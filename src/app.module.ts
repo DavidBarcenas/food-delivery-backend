@@ -1,15 +1,16 @@
 import {MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
-import {ConfigModule} from '@nestjs/config';
-import {GraphQLModule} from '@nestjs/graphql';
 
+import {AuthModule} from './auth/auth.module';
+import {ConfigModule} from '@nestjs/config';
 import {DatabaseModule} from './database/database.module';
-import {UsersModule} from './users/users.module';
-import {MailModule} from './mail/mail.module';
-import {JwtModule} from './jwt/jwt.module';
+import {GraphQLModule} from '@nestjs/graphql';
 import {JwtMiddleware} from './jwt/jwt.middleware';
+import {JwtModule} from './jwt/jwt.module';
+import {MailModule} from './mail/mail.module';
+import {RestaurantsModule} from './restaurants/restaurants.module';
+import {UsersModule} from './users/users.module';
 import {environments} from './config/environments';
 import {schema} from './config/schema-validation';
-import {RestaurantsModule} from './restaurants/restaurants.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import {RestaurantsModule} from './restaurants/restaurants.module';
     }),
     JwtModule.forRoot({secretKey: process.env.SECRET_KEY}),
     DatabaseModule,
+    AuthModule,
     MailModule,
     UsersModule,
     RestaurantsModule,

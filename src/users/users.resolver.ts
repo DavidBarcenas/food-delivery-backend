@@ -1,14 +1,13 @@
-import {UseGuards} from '@nestjs/common';
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql';
 import {LoginInput, LoginOutput} from './dtos/login-dto';
 import {AuthUser} from 'src/auth/auth-user.decorator';
-import {AuthGuard} from 'src/auth/auth.guard';
 import {EditProfileInput, EditProfileOutput} from './dtos/edit-profile.dto';
 import {UserProfileInput, UserProfileOutput} from './dtos/user-profile.dto';
 import {VerifyEmailInput, VerifyEmailOutput} from './dtos/verify-email.dto';
 import {UsersService} from './users.service';
 import {User} from './entities/user.entity';
 import {CreateAccountInput, CreateAccountOutput} from './dtos/create-account.dto';
+import {Role} from 'src/auth/role.decorator';
 
 @Resolver(of => User)
 export class UsersResolver {
@@ -27,19 +26,19 @@ export class UsersResolver {
   }
 
   @Query(returns => User)
-  @UseGuards(AuthGuard)
+  @Role(['Any'])
   me(@AuthUser() authUser: User): User {
     return authUser;
   }
 
   @Query(returns => UserProfileOutput)
-  @UseGuards(AuthGuard)
+  @Role(['Any'])
   userProfile(@Args() userProfileInput: UserProfileInput): Promise<UserProfileOutput> {
     return this.usersService.findByEmail(userProfileInput.email);
   }
 
   @Mutation(returns => EditProfileOutput)
-  @UseGuards(AuthGuard)
+  @Role(['Any'])
   editProfile(
     @AuthUser() authUser: User,
     @Args('input') editProfileInput: EditProfileInput,
