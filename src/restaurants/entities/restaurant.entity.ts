@@ -1,8 +1,9 @@
-import {Field, InputType, ObjectType} from '@nestjs/graphql';
 import {Column, Entity, ManyToOne} from 'typeorm';
-import {IsString} from 'class-validator';
-import {CoreEntity} from 'src/common/entities/core.entity';
+import {Field, InputType, ObjectType} from '@nestjs/graphql';
+
 import {Category} from './category.entity';
+import {CoreEntity} from 'src/common/entities/core.entity';
+import {IsString} from 'class-validator';
 import {User} from 'src/users/entities/user.entity';
 
 @InputType('RestaurantInputType', {isAbstract: true})
@@ -33,8 +34,7 @@ export class Restaurant extends CoreEntity {
 
   @Field(type => User)
   @ManyToOne(type => User, user => user.restaurants, {
-    nullable: true,
-    onDelete: 'SET NULL',
+    onDelete: 'CASCADE',
   })
   owner: User;
 }

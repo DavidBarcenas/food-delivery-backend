@@ -1,15 +1,17 @@
-import {InternalServerErrorException} from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+
 import {BeforeInsert, BeforeUpdate, Column, Entity, OneToMany} from 'typeorm';
 import {Field, InputType, ObjectType, registerEnumType} from '@nestjs/graphql';
-import * as bcrypt from 'bcrypt';
 import {IsBoolean, IsEmail, IsEnum, IsString} from 'class-validator';
+
 import {CoreEntity} from 'src/common/entities/core.entity';
+import {InternalServerErrorException} from '@nestjs/common';
 import {Restaurant} from 'src/restaurants/entities/restaurant.entity';
 
-enum UserRole {
-  Owner,
-  Client,
-  Delivery,
+export enum UserRole {
+  Owner = 'Owner',
+  Client = 'Client',
+  Delivery = 'Delivery',
 }
 
 registerEnumType(UserRole, {name: 'UserRole'});

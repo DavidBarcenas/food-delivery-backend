@@ -18,8 +18,9 @@ export class RestaurantService {
     createRestaurantInput: CreateRestaurantInput,
   ): Promise<CreateRestaurantOutput> {
     try {
-      const newRestaurant = this.restaurants.create(CreateRestaurantInput);
+      const newRestaurant = this.restaurants.create(createRestaurantInput);
       newRestaurant.owner = owner;
+      console.log(newRestaurant.owner);
       const categoryName = createRestaurantInput.categoryName.trim().toLowerCase();
       const categorySlug = categoryName.replace(/ /g, '-');
       let category = await this.categories.findOne({slug: categorySlug});
@@ -29,11 +30,10 @@ export class RestaurantService {
         );
       }
       newRestaurant.category = category;
-      console.log(newRestaurant);
       await this.restaurants.save(newRestaurant);
       return {ok: true};
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       return {ok: false, error: 'Could not create restaurant'};
     }
   }
