@@ -22,7 +22,9 @@ import {schema} from './config/schema-validation';
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
-      context: ({req}) => ({user: req['user']}),
+      context: ({req}) => {
+        return {user: req['user']};
+      },
     }),
     JwtModule.forRoot({secretKey: process.env.SECRET_KEY}),
     DatabaseModule,
