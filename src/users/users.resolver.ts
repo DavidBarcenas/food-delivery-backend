@@ -25,7 +25,7 @@ export class UsersResolver {
     return this.usersService.login(loginInput);
   }
 
-  @Query(returns => User)
+  @Query(returns => User, {nullable: true})
   @Role(['Any'])
   me(@AuthUser() authUser: User) {
     return authUser;

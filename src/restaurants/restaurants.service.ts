@@ -20,7 +20,6 @@ export class RestaurantService {
     try {
       const newRestaurant = this.restaurants.create(createRestaurantInput);
       newRestaurant.owner = owner;
-      console.log(newRestaurant.owner);
       const categoryName = createRestaurantInput.categoryName.trim().toLowerCase();
       const categorySlug = categoryName.replace(/ /g, '-');
       let category = await this.categories.findOne({slug: categorySlug});
