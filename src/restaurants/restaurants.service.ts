@@ -6,12 +6,13 @@ import {CreateRestaurantInput, CreateRestaurantOutput} from './dtos/create-resta
 import {EditRestaurentInput, EditRestaurentOutput} from './dtos/edit-restaurant.dto';
 import {Category} from './entities/category.entity';
 import {Restaurant} from './entities/restaurant.entity';
+import {CategoryRepository} from './repositories/category.repository';
 
 @Injectable()
 export class RestaurantService {
   constructor(
     @InjectRepository(Restaurant) private readonly restaurants: Repository<Restaurant>,
-    @InjectRepository(Category) private readonly categories: Repository<Category>,
+    @InjectRepository(Category) private readonly categories: CategoryRepository,
   ) {}
 
   async createRestaurant(
@@ -21,12 +22,11 @@ export class RestaurantService {
     try {
       const newRestaurant = this.restaurants.create(createRestaurantInput);
       newRestaurant.owner = owner;
-      const category = await this.getCategory(createRestaurantInput.categoryName);
+      const category = await this.categories.getOrCreate(createRestaurantInput.categoryName);
       newRestaurant.category = category;
       await this.restaurants.save(newRestaurant);
       return {ok: true};
     } catch (error) {
-      console.log(error);
       return {ok: false, error: 'Could not create restaurant'};
     }
   }
@@ -43,23 +43,20 @@ export class RestaurantService {
       if (owner.id !== restaurant.ownerId) {
         return {ok: false, error: "You cant't edit a restaurant that you don't own"};
       }
+      let category: Category = null;
+      if (editRestaurantInput.categoryName) {
+        category = await this.categories.getOrCreate(editRestaurantInput.categoryName);
+      }
+      await this.restaurants.save([
+        {
+          id: editRestaurantInput.restaurantId,
+          ...editRestaurantInput,
+          ...(category && {category}),
+        },
+      ]);
       return {ok: true};
     } catch (error) {
       return {ok: true, error: 'Could not edit restaurant'};
     }
-  }
-
-  async getCategory(name: string): Promise<Category> {
-    const categoryName = name.trim().toLowerCase();
-    const categorySlug = categoryName.replace(/ /g, '-');
-    let category = await this.categories.findOne({slug: categorySlug});
-    if (!category) {
-      category = await this.createCategory(categoryName, categorySlug);
-    }
-    return category;
-  }
-
-  async createCategory(name: string, slug: string): Promise<Category> {
-    return await this.categories.save(this.categories.create({name, slug}));
   }
 }
