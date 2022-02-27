@@ -88,4 +88,8 @@ export class RestaurantService {
       return {ok: false, error: 'Not found categories'};
     }
   }
+
+  countRestaurants(category: Category): Promise<number> {
+    return this.restaurants.count({category});
+  }
 }
