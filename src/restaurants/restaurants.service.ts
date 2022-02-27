@@ -2,6 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {User} from 'src/users/entities/user.entity';
 import {Repository} from 'typeorm';
+import {CategoryInput, CategoryOutput} from './dtos/category.dto';
 import {CreateRestaurantInput, CreateRestaurantOutput} from './dtos/create-restaurant.dto';
 import {DeleteRestaurentInput, DeleteRestaurentOutput} from './dtos/delete-restaurant.dto';
 import {EditRestaurentInput, EditRestaurentOutput} from './dtos/edit-restaurant.dto';
@@ -86,6 +87,17 @@ export class RestaurantService {
       return {ok: true, categories};
     } catch (error) {
       return {ok: false, error: 'Not found categories'};
+    }
+  }
+
+  async findCategoryBySlug({slug}: CategoryInput): Promise<CategoryOutput> {
+    try {
+      const category = await this.categories.findOneOrFail({slug}, {relations: ['restaurants']});
+      if (category) {
+        return {ok: true, category};
+      }
+    } catch (error) {
+      return {ok: false, error: 'Category not found'};
     }
   }
 
