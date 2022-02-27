@@ -58,7 +58,7 @@ export class CategoryResolver {
   }
 
   @Query(type => CategoryOutput)
-  category(@Args() categoryInput: CategoryInput) {
+  category(@Args('input') categoryInput: CategoryInput) {
     return this.restaurantService.findCategoryBySlug(categoryInput);
   }
 }
