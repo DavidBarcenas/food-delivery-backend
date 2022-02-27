@@ -73,11 +73,19 @@ export class RestaurantService {
       if (owner.id !== restaurant.ownerId) {
         return {ok: false, error: "You cant't delete a restaurant that you don't own"};
       }
-      // await this.restaurants.delete(deleteRestaurantInput.restaurantId);
-      console.log(restaurant);
+      await this.restaurants.delete(deleteRestaurantInput.restaurantId);
       return {ok: true};
     } catch (error) {
       return {ok: true, error: 'Could not delete restaurant'};
+    }
+  }
+
+  async allCategories() {
+    try {
+      const categories = await this.categories.find();
+      return {ok: true, categories};
+    } catch (error) {
+      return {ok: false, error: 'Not found categories'};
     }
   }
 }
