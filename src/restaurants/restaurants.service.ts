@@ -1,13 +1,14 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {User} from 'src/users/entities/user.entity';
-import {Repository} from 'typeorm';
+import {ILike, Repository} from 'typeorm';
 import {AllRestaurantsInput, AllRestaurantsOutput} from './dtos/all-restaurants.dto';
 import {CategoryInput, CategoryOutput} from './dtos/category.dto';
 import {CreateRestaurantInput, CreateRestaurantOutput} from './dtos/create-restaurant.dto';
 import {DeleteRestaurentInput, DeleteRestaurentOutput} from './dtos/delete-restaurant.dto';
 import {EditRestaurentInput, EditRestaurentOutput} from './dtos/edit-restaurant.dto';
 import {RestaurantInput, RestaurantOutput} from './dtos/restaurant.dto';
+import {SearchRestaurantInput, SearchRestaurantOutput} from './dtos/search-restaurant.dto';
 import {Category} from './entities/category.entity';
 import {Restaurant} from './entities/restaurant.entity';
 import {CategoryRepository} from './repositories/category.repository';
@@ -109,6 +110,24 @@ export class RestaurantService {
       return {ok: true, restaurant};
     } catch (error) {
       return {ok: false, error: 'Restaurant not load'};
+    }
+  }
+
+  async searchRestaurant({query, page}: SearchRestaurantInput): Promise<SearchRestaurantOutput> {
+    try {
+      const [restaurants, totalResults] = await this.restaurants.findAndCount({
+        where: {name: ILike(`%${query}%`)},
+        take: 5,
+        skip: (page - 1) * 5,
+      });
+      return {
+        ok: true,
+        restaurants,
+        totalResults,
+        totalPages: Math.ceil(totalResults / 5),
+      };
+    } catch (error) {
+      return {ok: false, error: 'Restaurants not search for restaurants'};
     }
   }
 
