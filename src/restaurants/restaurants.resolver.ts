@@ -3,6 +3,7 @@ import {AuthUser} from 'src/auth/auth-user.decorator';
 import {Role} from 'src/auth/role.decorator';
 import {User} from 'src/users/entities/user.entity';
 import {AllCategoryOutput} from './dtos/all-categories.dto';
+import {AllRestaurantsInput, AllRestaurantsOutput} from './dtos/all-restaurants.dto';
 import {CategoryInput, CategoryOutput} from './dtos/category.dto';
 import {CreateRestaurantInput, CreateRestaurantOutput} from './dtos/create-restaurant.dto';
 import {DeleteRestaurentInput, DeleteRestaurentOutput} from './dtos/delete-restaurant.dto';
@@ -40,6 +41,13 @@ export class RestaurantResolver {
     @Args('input') deleteRestaurantInput: DeleteRestaurentInput,
   ): Promise<DeleteRestaurentOutput> {
     return this.restaurantService.deleteRestaurant(owner, deleteRestaurantInput);
+  }
+
+  @Query(type => AllRestaurantsOutput)
+  restaurants(
+    @Args('input') allRestaurantsInput: AllRestaurantsInput,
+  ): Promise<AllRestaurantsOutput> {
+    return this.restaurantService.allRestaurants(allRestaurantsInput);
   }
 }
 
