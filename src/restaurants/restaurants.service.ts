@@ -7,6 +7,7 @@ import {CategoryInput, CategoryOutput} from './dtos/category.dto';
 import {CreateRestaurantInput, CreateRestaurantOutput} from './dtos/create-restaurant.dto';
 import {DeleteRestaurentInput, DeleteRestaurentOutput} from './dtos/delete-restaurant.dto';
 import {EditRestaurentInput, EditRestaurentOutput} from './dtos/edit-restaurant.dto';
+import {RestaurantInput, RestaurantOutput} from './dtos/restaurant.dto';
 import {Category} from './entities/category.entity';
 import {Restaurant} from './entities/restaurant.entity';
 import {CategoryRepository} from './repositories/category.repository';
@@ -96,6 +97,18 @@ export class RestaurantService {
       };
     } catch (error) {
       return {ok: false, error: 'Not found restaurants'};
+    }
+  }
+
+  async findRestaurantById({restaurantId}: RestaurantInput): Promise<RestaurantOutput> {
+    try {
+      const restaurant = await this.restaurants.findOne({id: restaurantId});
+      if (!restaurant) {
+        return {ok: false, error: 'Restaurant not found'};
+      }
+      return {ok: true, restaurant};
+    } catch (error) {
+      return {ok: false, error: 'Restaurant not load'};
     }
   }
 
