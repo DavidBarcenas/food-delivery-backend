@@ -1,9 +1,10 @@
-import {Module} from '@nestjs/common';
-import {ConfigService} from '@nestjs/config';
-import {TypeOrmModule} from '@nestjs/typeorm';
 import {Category} from 'src/restaurants/entities/category.entity';
-import {Restaurant} from 'src/restaurants/entities/restaurant.entity';
+import {ConfigService} from '@nestjs/config';
+import {Dish} from 'src/restaurants/entities/dish.entity';
 import {EmailVerification} from '../users/entities/email-verification.entity';
+import {Module} from '@nestjs/common';
+import {Restaurant} from 'src/restaurants/entities/restaurant.entity';
+import {TypeOrmModule} from '@nestjs/typeorm';
 import {User} from '../users/entities/user.entity';
 
 @Module({
@@ -17,7 +18,7 @@ import {User} from '../users/entities/user.entity';
           username: config.get('DB_USER'),
           password: config.get('DB_PASSWORD'),
           database: config.get('DB_NAME'),
-          entities: [User, EmailVerification, Restaurant, Category],
+          entities: [User, EmailVerification, Restaurant, Category, Dish],
           synchronize: config.get('NODE_ENV') !== 'production',
         };
       },
