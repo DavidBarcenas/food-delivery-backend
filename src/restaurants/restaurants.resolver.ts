@@ -5,12 +5,14 @@ import {User} from 'src/users/entities/user.entity';
 import {AllCategoryOutput} from './dtos/all-categories.dto';
 import {AllRestaurantsInput, AllRestaurantsOutput} from './dtos/all-restaurants.dto';
 import {CategoryInput, CategoryOutput} from './dtos/category.dto';
+import {CreateDishInput, CreateDishOutput} from './dtos/create-dish.dto';
 import {CreateRestaurantInput, CreateRestaurantOutput} from './dtos/create-restaurant.dto';
 import {DeleteRestaurentInput, DeleteRestaurentOutput} from './dtos/delete-restaurant.dto';
 import {EditRestaurentInput, EditRestaurentOutput} from './dtos/edit-restaurant.dto';
 import {RestaurantInput, RestaurantOutput} from './dtos/restaurant.dto';
 import {SearchRestaurantInput, SearchRestaurantOutput} from './dtos/search-restaurant.dto';
 import {Category} from './entities/category.entity';
+import {Dish} from './entities/dish.entity';
 import {Restaurant} from './entities/restaurant.entity';
 import {RestaurantService} from './restaurants.service';
 
@@ -82,5 +84,19 @@ export class CategoryResolver {
   @Query(type => CategoryOutput)
   category(@Args('input') categoryInput: CategoryInput) {
     return this.restaurantService.findCategoryBySlug(categoryInput);
+  }
+}
+
+@Resolver(of => Dish)
+export class DishResolver {
+  constructor(private readonly restaurantService: RestaurantService) {}
+
+  @Mutation(returns => CreateDishOutput)
+  @Role(['Owner'])
+  createDish(
+    @AuthUser() owner: User,
+    @Args('input') createDishInput: CreateDishInput,
+  ): Promise<CreateDishOutput> {
+    return this.restaurantService.createDish(owner, createDishInput);
   }
 }
