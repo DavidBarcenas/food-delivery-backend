@@ -21,7 +21,7 @@ export class Dish extends CoreEntity {
   price: number;
 
   @Field(type => String, {nullable: true})
-  @Column()
+  @Column({nullable: true})
   @IsString()
   photo?: string;
 
@@ -52,6 +52,6 @@ class DishOption {
   @Field(type => [String], {nullable: true})
   choices?: string[];
 
-  @Field(type => Int)
-  extra: number;
+  @Field(type => Int, {nullable: true})
+  extra?: number;
 }
