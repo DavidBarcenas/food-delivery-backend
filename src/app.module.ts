@@ -7,6 +7,7 @@ import {GraphQLModule} from '@nestjs/graphql';
 import {JwtMiddleware} from './jwt/jwt.middleware';
 import {JwtModule} from './jwt/jwt.module';
 import {MailModule} from './mail/mail.module';
+import {OrdersModule} from './orders/orders.module';
 import {RestaurantsModule} from './restaurants/restaurants.module';
 import {UsersModule} from './users/users.module';
 import {environments} from './config/environments';
@@ -32,6 +33,7 @@ import {schema} from './config/schema-validation';
     MailModule,
     UsersModule,
     RestaurantsModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [],
