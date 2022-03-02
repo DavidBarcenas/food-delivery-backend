@@ -186,7 +186,24 @@ export class RestaurantService {
   }
 
   async editDish(owner: User, editDishInput: EditDishInput): Promise<EditDishOutput> {
-    return {ok: true};
+    try {
+      const dish = await this.dishes.findOne(editDishInput.dishId, {relations: ['restaurant']});
+      if (!dish) {
+        return {ok: false, error: 'Dish not found'};
+      }
+      if (dish.restaurant.ownerId !== owner.id) {
+        return {ok: false, error: 'Could not update this dish'};
+      }
+      await this.dishes.save([
+        {
+          id: editDishInput.dishId,
+          ...editDishInput,
+        },
+      ]);
+      return {ok: true};
+    } catch (error) {
+      return {ok: false, error: 'Could not update dish'};
+    }
   }
 
   async deleteDish(owner: User, {dishId}: DeleteDishInput): Promise<DeleteDishOutput> {
@@ -198,6 +215,7 @@ export class RestaurantService {
       if (dish.restaurant.ownerId !== owner.id) {
         return {ok: false, error: 'Could not delete this dish'};
       }
+      await this.dishes.delete(dishId);
       return {ok: true};
     } catch (error) {
       return {ok: false, error: 'Could not delete dish'};
