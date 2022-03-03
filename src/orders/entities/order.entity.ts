@@ -3,7 +3,6 @@ import {Field, Float, InputType, ObjectType, registerEnumType} from '@nestjs/gra
 import {IsEnum, IsNumber} from 'class-validator';
 
 import {CoreEntity} from 'src/common/entities/core.entity';
-import {Dish} from 'src/restaurants/entities/dish.entity';
 import {OrderItem} from './order-item.entity';
 import {Restaurant} from 'src/restaurants/entities/restaurant.entity';
 import {User} from 'src/users/entities/user.entity';
@@ -34,19 +33,19 @@ export class Order extends CoreEntity {
     onDelete: 'SET NULL',
     nullable: true,
   })
-  restaurant: Restaurant;
+  restaurant?: Restaurant;
 
   @Field(type => [OrderItem])
   @ManyToMany(type => OrderItem)
   @JoinTable()
   items: OrderItem[];
 
-  @Column()
-  @Field(type => Float)
+  @Column({nullable: true})
+  @Field(type => Float, {nullable: true})
   @IsNumber()
-  total: number;
+  total?: number;
 
-  @Column({type: 'enum', enum: OrderStatus})
+  @Column({type: 'enum', enum: OrderStatus, default: OrderStatus.Pending})
   @Field(type => OrderStatus)
   @IsEnum(OrderStatus)
   status: OrderStatus;
