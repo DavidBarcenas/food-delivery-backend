@@ -81,17 +81,30 @@ export class OrderService {
 
   async getOrders(user: User, {status}: GetOrdersInput): Promise<GetOrdersOutput> {
     try {
-      let orders: Order[] = [];
+      let orders: Order[];
       if (user.role === UserRole.Client) {
-        orders = await this.orders.find({where: {customer: user}});
+        orders = await this.orders.find({
+          where: {
+            customer: user,
+            ...(status && {status}),
+          },
+        });
       } else if (user.role === UserRole.Delivery) {
-        orders = await this.orders.find({where: {driver: user}});
+        orders = await this.orders.find({
+          where: {
+            driver: user,
+            ...(status && {status}),
+          },
+        });
       } else if (user.role === UserRole.Owner) {
         const restaurants = await this.restaurants.find({
           where: {owner: user},
           relations: ['orders'],
         });
         orders = restaurants.map(restaurant => restaurant.orders).flat(1);
+        if (status) {
+          orders = orders.filter(order => order.status === status);
+        }
       }
 
       return {ok: true, orders};
