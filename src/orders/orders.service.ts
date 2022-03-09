@@ -5,10 +5,11 @@ import {Restaurant} from 'src/restaurants/entities/restaurant.entity';
 import {User, UserRole} from 'src/users/entities/user.entity';
 import {Repository} from 'typeorm';
 import {CreateOrderInput, CreateOrderOutput} from './dto/create-order.dto';
+import {EditOrderInput, EditOrderOutput} from './dto/edit-order.dto';
 import {GetOrderInput, GetOrderOutput} from './dto/get-order.dto';
 import {GetOrdersInput, GetOrdersOutput} from './dto/get-orders.dto';
 import {OrderItem} from './entities/order-item.entity';
-import {Order} from './entities/order.entity';
+import {Order, OrderStatus} from './entities/order.entity';
 
 @Injectable()
 export class OrderService {
@@ -123,17 +124,8 @@ export class OrderService {
           error: 'Order not found',
         };
       }
-      let canSee = true;
-      if (user.role === UserRole.Client && order.customerId !== user.id) {
-        canSee = false;
-      }
-      if (user.role === UserRole.Delivery && order.driverId !== user.id) {
-        canSee = false;
-      }
-      if (user.role === UserRole.Owner && order.restaurant.ownerId !== user.id) {
-        canSee = false;
-      }
-      if (!canSee) {
+
+      if (!this.canSeeOrder(user, order)) {
         return {
           ok: false,
           error: "You can't see that.",
@@ -147,5 +139,64 @@ export class OrderService {
     } catch {
       return {ok: false, error: 'Could not load order.'};
     }
+  }
+
+  async editOrder(user: User, editOrderInput: EditOrderInput): Promise<EditOrderOutput> {
+    try {
+      const order = await this.orders.findOne(editOrderInput.id, {relations: ['restaurant']});
+      if (!order) {
+        return {
+          ok: false,
+          error: 'Order not found.',
+        };
+      }
+      if (!this.canSeeOrder(user, order)) {
+        return {
+          ok: false,
+          error: "You can't edit that.",
+        };
+      }
+      let canEdit = true;
+      if (user.role === UserRole.Client) {
+        canEdit = false;
+      }
+      if (user.role === UserRole.Owner) {
+        if (
+          editOrderInput.status !== OrderStatus.Coocking &&
+          editOrderInput.status !== OrderStatus.Cooked
+        ) {
+          canEdit = false;
+        }
+      }
+      if (user.role === UserRole.Delivery) {
+        if (
+          editOrderInput.status !== OrderStatus.PickedUp &&
+          editOrderInput.status !== OrderStatus.Delivered
+        ) {
+          canEdit = false;
+        }
+      }
+      if (!canEdit) {
+        return {ok: false, error: "You can't do that'"};
+      }
+      await this.orders.save([{id: editOrderInput.id, status: editOrderInput.status}]);
+      return {ok: true};
+    } catch {
+      return {ok: false, error: 'Could not edit order.'};
+    }
+  }
+
+  canSeeOrder(user: User, order: Order): boolean {
+    let canSee = true;
+    if (user.role === UserRole.Client && order.customerId !== user.id) {
+      canSee = false;
+    }
+    if (user.role === UserRole.Delivery && order.driverId !== user.id) {
+      canSee = false;
+    }
+    if (user.role === UserRole.Owner && order.restaurant.ownerId !== user.id) {
+      canSee = false;
+    }
+    return canSee;
   }
 }
