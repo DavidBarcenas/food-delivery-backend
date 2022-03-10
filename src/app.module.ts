@@ -22,6 +22,7 @@ import {schema} from './config/schema-validation';
       validationSchema: schema,
     }),
     GraphQLModule.forRoot({
+      installSubscriptionHandlers: true,
       autoSchemaFile: true,
       context: ({req}) => {
         return {user: req['user']};
