@@ -12,6 +12,8 @@ import {UsersModule} from './users/users.module';
 import {environments} from './config/environments';
 import {schema} from './config/schema-validation';
 
+const TOKEN_KEY = 'Authorization';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -23,10 +25,17 @@ import {schema} from './config/schema-validation';
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
       autoSchemaFile: true,
-      context: ({req, connection}) => {
-        console.log(connection);
-        const TOKEN_KEY = 'authorization';
-        return {token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY]};
+      subscriptions: {
+        'subscriptions-transport-ws': {
+          onConnect: connectionParams => {
+            return {token: connectionParams[TOKEN_KEY]};
+          },
+        },
+      },
+      context: ({req}) => {
+        if (req) {
+          return {token: req.headers[TOKEN_KEY.toLowerCase()]};
+        }
       },
     }),
     JwtModule.forRoot({secretKey: process.env.SECRET_KEY}),
