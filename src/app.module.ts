@@ -4,7 +4,6 @@ import {AuthModule} from './auth/auth.module';
 import {ConfigModule} from '@nestjs/config';
 import {DatabaseModule} from './database/database.module';
 import {GraphQLModule} from '@nestjs/graphql';
-import {JwtMiddleware} from './jwt/jwt.middleware';
 import {JwtModule} from './jwt/jwt.module';
 import {MailModule} from './mail/mail.module';
 import {OrdersModule} from './orders/orders.module';
@@ -24,8 +23,10 @@ import {schema} from './config/schema-validation';
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
       autoSchemaFile: true,
-      context: ({req}) => {
-        return {user: req['user']};
+      context: ({req, connection}) => {
+        console.log(connection);
+        const TOKEN_KEY = 'authorization';
+        return {token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY]};
       },
     }),
     JwtModule.forRoot({secretKey: process.env.SECRET_KEY}),
@@ -39,11 +40,4 @@ import {schema} from './config/schema-validation';
   controllers: [],
   providers: [],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).forRoutes({
-      path: '/graphql',
-      method: RequestMethod.POST,
-    });
-  }
-}
+export class AppModule {}
