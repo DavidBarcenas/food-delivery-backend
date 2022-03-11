@@ -1,11 +1,10 @@
-import {MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
-
 import {AuthModule} from './auth/auth.module';
 import {ConfigModule} from '@nestjs/config';
 import {DatabaseModule} from './database/database.module';
 import {GraphQLModule} from '@nestjs/graphql';
 import {JwtModule} from './jwt/jwt.module';
 import {MailModule} from './mail/mail.module';
+import {Module} from '@nestjs/common';
 import {OrdersModule} from './orders/orders.module';
 import {RestaurantsModule} from './restaurants/restaurants.module';
 import {UsersModule} from './users/users.module';
