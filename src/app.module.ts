@@ -1,4 +1,5 @@
 import {AuthModule} from './auth/auth.module';
+import {CommonModule} from './common/common.module';
 import {ConfigModule} from '@nestjs/config';
 import {DatabaseModule} from './database/database.module';
 import {GraphQLModule} from '@nestjs/graphql';
@@ -41,6 +42,7 @@ const TOKEN_KEY = 'Authorization';
     DatabaseModule,
     AuthModule,
     MailModule,
+    CommonModule,
     UsersModule,
     RestaurantsModule,
     OrdersModule,
