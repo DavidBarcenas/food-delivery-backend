@@ -65,7 +65,7 @@ export class OrderResolver {
   }
 
   @Subscription(returns => Order)
-  @Role(['Owner'])
+  @Role(['Delivery'])
   cookedOrders() {
     return this.pubsub.asyncIterator(NEW_COOKED_ORDER);
   }

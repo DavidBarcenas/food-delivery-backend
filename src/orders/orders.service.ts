@@ -149,7 +149,7 @@ export class OrderService {
 
   async editOrder(user: User, editOrderInput: EditOrderInput): Promise<EditOrderOutput> {
     try {
-      const order = await this.orders.findOne(editOrderInput.id, {relations: ['restaurant']});
+      const order = await this.orders.findOne(editOrderInput.id);
       if (!order) {
         return {
           ok: false,
@@ -186,6 +186,7 @@ export class OrderService {
         return {ok: false, error: "You can't do that'"};
       }
       await this.orders.save([{id: editOrderInput.id, status: editOrderInput.status}]);
+
       if (user.role === UserRole.Owner) {
         if (editOrderInput.status === OrderStatus.Cooked) {
           await this.pubsub.publish(NEW_COOKED_ORDER, {
