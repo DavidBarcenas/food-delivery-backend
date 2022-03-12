@@ -9,8 +9,14 @@ import {GetOrderInput, GetOrderOutput} from './dto/get-order.dto';
 import {Role} from 'src/auth/role.decorator';
 import {EditOrderInput, EditOrderOutput} from './dto/edit-order.dto';
 import {Inject} from '@nestjs/common';
-import {NEW_COOKED_ORDER, NEW_PENDING_ORDER, PUB_SUB} from 'src/common/common.constants';
+import {
+  NEW_COOKED_ORDER,
+  NEW_ORDER_UPDATES,
+  NEW_PENDING_ORDER,
+  PUB_SUB,
+} from 'src/common/common.constants';
 import {PubSub} from 'graphql-subscriptions';
+import {OrderUpdatesInput} from './dto/order-updates.dto';
 
 @Resolver(of => Order)
 export class OrderResolver {
@@ -68,5 +74,23 @@ export class OrderResolver {
   @Role(['Delivery'])
   cookedOrders() {
     return this.pubsub.asyncIterator(NEW_COOKED_ORDER);
+  }
+
+  @Subscription(returns => Order, {
+    filter: (payload, variables, context) => {
+      const order: Order = payload.orderUpdates;
+      if (
+        order.driverId !== context.user.id &&
+        order.customerId !== context.user.id &&
+        order.restaurant.ownerId !== context.user.id
+      ) {
+        return false;
+      }
+      return payload.orderUpdates.id === variables.input.id;
+    },
+  })
+  @Role(['Any'])
+  orderUpdates(@Args('input') orderUpdatesInput: OrderUpdatesInput) {
+    return this.pubsub.asyncIterator(NEW_ORDER_UPDATES);
   }
 }
