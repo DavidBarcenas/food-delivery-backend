@@ -27,6 +27,11 @@ export class PaymentService {
         return {ok: false, error: 'You are not allowed to do this.'};
       }
       await this.payments.save(this.payments.create({transactionId, user: owner, restaurant}));
+      restaurant.isPromoted = true;
+      const date = new Date();
+      date.setDate(date.getDate() + 7);
+      restaurant.promotedUntil = date;
+      this.restaurants.save(restaurant);
       return {ok: true};
     } catch {
       return {ok: false, error: 'Could not create payment'};

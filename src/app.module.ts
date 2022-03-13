@@ -9,6 +9,7 @@ import {Module} from '@nestjs/common';
 import {OrdersModule} from './orders/orders.module';
 import {PaymentsModule} from './payments/payments.module';
 import {RestaurantsModule} from './restaurants/restaurants.module';
+import {ScheduleModule} from '@nestjs/schedule';
 import {UsersModule} from './users/users.module';
 import {environments} from './config/environments';
 import {schema} from './config/schema-validation';
@@ -40,6 +41,7 @@ const TOKEN_KEY = 'Authorization';
       },
     }),
     JwtModule.forRoot({secretKey: process.env.SECRET_KEY}),
+    ScheduleModule.forRoot(),
     DatabaseModule,
     AuthModule,
     MailModule,

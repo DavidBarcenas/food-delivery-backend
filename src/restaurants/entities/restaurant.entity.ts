@@ -50,4 +50,12 @@ export class Restaurant extends CoreEntity {
 
   @RelationId((restaurant: Restaurant) => restaurant.owner)
   ownerId: number;
+
+  @Field(type => Boolean)
+  @Column({default: false})
+  isPromoted: boolean;
+
+  @Field(type => Date, {nullable: true})
+  @Column({nullable: true})
+  promotedUntil: Date;
 }
