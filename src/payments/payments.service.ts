@@ -4,6 +4,7 @@ import {Restaurant} from 'src/restaurants/entities/restaurant.entity';
 import {User} from 'src/users/entities/user.entity';
 import {Repository} from 'typeorm';
 import {CreatePaymentInput, CreatePaymentOutput} from './dtos/create-payment.dto';
+import {GetPaymentsOutput} from './dtos/get-payment.dto';
 import {Payment} from './entities/payment.entity';
 
 @Injectable()
@@ -29,6 +30,15 @@ export class PaymentService {
       return {ok: true};
     } catch {
       return {ok: false, error: 'Could not create payment'};
+    }
+  }
+
+  async getPayments(user: User): Promise<GetPaymentsOutput> {
+    try {
+      const payments = await this.payments.find({user});
+      return {ok: true, payments};
+    } catch (error) {
+      return {ok: false, error: 'Could not load payments.'};
     }
   }
 }
