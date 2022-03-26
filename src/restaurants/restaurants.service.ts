@@ -92,15 +92,15 @@ export class RestaurantService {
   async allRestaurants({page}: AllRestaurantsInput): Promise<AllRestaurantsOutput> {
     try {
       const [restaurants, totalResults] = await this.restaurants.findAndCount({
-        take: 5,
-        skip: (page - 1) * 5,
+        take: 25,
+        skip: (page - 1) * 25,
         order: {isPromoted: 'DESC'},
         relations: ['category'],
       });
       return {
         ok: true,
         results: restaurants,
-        totalPages: Math.ceil(totalResults / 5),
+        totalPages: Math.ceil(totalResults / 25),
         totalResults,
       };
     } catch (error) {
@@ -155,13 +155,13 @@ export class RestaurantService {
       }
       const restaurants = await this.restaurants.find({
         where: {category},
-        take: 5,
-        skip: (page - 1) * 5,
+        take: 25,
+        skip: (page - 1) * 25,
         order: {isPromoted: 'DESC'},
       });
       category.restaurants = restaurants;
       const totalResults = await this.countRestaurants(category);
-      return {ok: true, category, totalPages: Math.ceil(totalResults / 5)};
+      return {ok: true, category, totalPages: Math.ceil(totalResults / 25), totalResults};
     } catch (error) {
       return {ok: false, error: 'Category not load'};
     }
