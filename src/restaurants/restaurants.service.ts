@@ -95,6 +95,7 @@ export class RestaurantService {
         take: 5,
         skip: (page - 1) * 5,
         order: {isPromoted: 'DESC'},
+        relations: ['category'],
       });
       return {
         ok: true,
