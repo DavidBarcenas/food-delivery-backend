@@ -110,7 +110,9 @@ export class RestaurantService {
 
   async findRestaurantById({restaurantId}: RestaurantInput): Promise<RestaurantOutput> {
     try {
-      const restaurant = await this.restaurants.findOne(restaurantId, {relations: ['menu']});
+      const restaurant = await this.restaurants.findOne(restaurantId, {
+        relations: ['menu', 'category'],
+      });
       if (!restaurant) {
         return {ok: false, error: 'Restaurant not found'};
       }
@@ -124,14 +126,15 @@ export class RestaurantService {
     try {
       const [restaurants, totalResults] = await this.restaurants.findAndCount({
         where: {name: ILike(`%${query}%`)},
-        take: 5,
-        skip: (page - 1) * 5,
+        take: 25,
+        skip: (page - 1) * 25,
+        relations: ['category'],
       });
       return {
         ok: true,
         restaurants,
         totalResults,
-        totalPages: Math.ceil(totalResults / 5),
+        totalPages: Math.ceil(totalResults / 25),
       };
     } catch (error) {
       return {ok: false, error: 'Restaurants not search for restaurants'};
@@ -158,6 +161,7 @@ export class RestaurantService {
         take: 25,
         skip: (page - 1) * 25,
         order: {isPromoted: 'DESC'},
+        relations: ['category'],
       });
       category.restaurants = restaurants;
       const totalResults = await this.countRestaurants(category);
