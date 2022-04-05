@@ -13,6 +13,7 @@ import {ScheduleModule} from '@nestjs/schedule';
 import {UsersModule} from './users/users.module';
 import {environments} from './config/environments';
 import {schema} from './config/schema-validation';
+import {UploadsModule} from './uploads/uploads.module';
 
 const TOKEN_KEY = 'Authorization';
 
@@ -50,6 +51,7 @@ const TOKEN_KEY = 'Authorization';
     RestaurantsModule,
     OrdersModule,
     PaymentsModule,
+    UploadsModule,
   ],
   controllers: [],
   providers: [],
