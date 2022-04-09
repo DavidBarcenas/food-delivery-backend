@@ -27,6 +27,7 @@ export class OrderResolver {
   ) {}
 
   @Mutation(returns => CreateOrderOutput)
+  @Role(['Any'])
   createOrder(
     @AuthUser() customer: User,
     @Args('input') createOrderInput: CreateOrderInput,
@@ -87,7 +88,7 @@ export class OrderResolver {
       ) {
         return false;
       }
-      return payload.orderUpdates.id === variables.input.id;
+      return order.id === variables.input.id;
     },
   })
   @Role(['Any'])
