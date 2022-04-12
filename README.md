@@ -24,8 +24,15 @@
 - Linters and prettier config
 - Node mailer
 - Encryptations
+- Docker to create the database
 
 ## Running the app
+
+From your project directory, start up your application by running
+
+```bash
+ docker-compose up
+```
 
 ```bash
 # clone the project
