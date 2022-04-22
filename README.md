@@ -22,7 +22,7 @@
 - Postgress with TypeORM
 - Tasks schedules
 - Linters and prettier config
-- Node mailer
+- Email confirmation
 - Encryptations
 - Docker to create the database
 
