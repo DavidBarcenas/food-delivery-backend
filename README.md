@@ -1,48 +1,57 @@
-<h1 align="center">Nestjs - Food Delivery Backend</h1>
-<p align="center">Backend that allows the administration of clients, restaurants, orders, delivery men, mailing and more.</p>
-<p align="center">
-  🐞 <a href="https://github.com/DavidBarcenas/food-delivery-backend/issues">Report a Bug</a> 
-  🙋‍♂️ <a href="https://github.com/DavidBarcenas/food-delivery-backend/issues">Request Feature</a>
-</p>
+<div align="center">
+  <h1>Nestjs - Food Delivery Backend</h1>
+  <p>Food delivery application based on the concept of uber, rappi, etc... In which you can register as a customer, owner or delivery person and depending on your profile you can register your restaurant for the sale of food, help deliver orders and order what you like the most.</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+![image](https://img.shields.io/badge/nestjs-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+![image](https://img.shields.io/badge/GraphQl-E10098?style=for-the-badge&logo=graphql&logoColor=white)
+![image](https://img.shields.io/badge/Handlebars.js-f0772b?style=for-the-badge&logo=handlebarsdotjs&logoColor=black)
+![image](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
+![image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+![image](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+
+</div>
 
 ## The project
+
+Backend built mainly to be consumed by the frontend application made with react that you can find in
+the following link: [react-food-delivery](https://github.com/DavidBarcenas/react-food-delivery).
+
+## Features
 
 - Personalized mailing
 - Account confirmation
 - Use of graphql and apollo server
-- Json web token handling
-
-## Features
-
 - Web scokets with Graphql
 - Handlebears for mail templates
 - Postgress with TypeORM
 - Tasks schedules
 - Linters and prettier config
 - Email confirmation
-- Encryptations
 - Docker to create the database
 
-## Running the app
+## Installation
 
-From your project directory, start up your application by running
+To clone and run this application, you'll need Git and Node.js installed on your computer. Optional
+you can install Yarn.
+
+From your command line:
 
 ```bash
- docker-compose up
-```
-
-```bash
-# clone the project
+# Clone this repository
 $ git clone https://github.com/DavidBarcenas/food-delivery-backend.git
 
-# enter the folder
+# Go into the repository
 $ cd food-delivery-backend
 
-# install dependencies
+# Install dependencies
 $ yarn install
+```
+
+You must have [docker](https://www.docker.com/get-started/) installed to create and run the
+database.
+
+```bash
+$ docker-compose up
 ```
 
 ## Development
@@ -60,16 +69,20 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+After successfully running the application, you can go to
+[http://localhost:4000/graphql](http://localhost:4000/graphql) to interact with the graphql
+playground.
+
 ## Test
 
 ```bash
-# unit tests
+# Unit tests
 $ npm run test
 
 # e2e tests
 $ npm run test:e2e
 
-# test coverage
+# Test coverage
 $ npm run test:cov
 ```
 
