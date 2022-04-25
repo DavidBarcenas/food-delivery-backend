@@ -11,8 +11,8 @@ export class MailService {
       await this.mailerService.sendMail({
         to: email,
         from: 'Delivery <devcompany@gmail.com>',
-        subject: 'Welcome to Delivery App! Confirm your email',
-        text: 'Welcome to Delivery App! Confirm your email',
+        subject: 'Bienvenido a Food Delivery! Confirma tu cuenta',
+        text: 'Bienvenido a Food Delivery! Confirma tu cuenta',
         template: 'confirmation',
         context: {
           verificationUrl: url,

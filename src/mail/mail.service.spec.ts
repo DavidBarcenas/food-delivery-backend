@@ -7,8 +7,8 @@ const USER_EMAIL = 'bs.foo@mail.com';
 const MOCK_MAIL_OPTIONS = {
   to: USER_EMAIL,
   from: 'Delivery <devcompany@gmail.com>',
-  subject: 'Welcome to Delivery App! Confirm your email',
-  text: 'Welcome to Delivery App! Confirm your email',
+  subject: 'Bienvenido a Food Delivery! Confirma tu cuenta',
+  text: 'Bienvenido a Food Delivery! Confirma tu cuenta',
   template: 'confirmation',
   context: {
     verificationUrl: 'http://127.0.0.1:3000/confirm?code=code',
