@@ -12,6 +12,10 @@
 
 </div>
 
+### Preview
+
+![](./.readme-static/app.jpeg)
+
 ## The project
 
 Backend built mainly to be consumed by the frontend application made with react that you can find in
@@ -22,7 +26,7 @@ the following link: [react-food-delivery](https://github.com/DavidBarcenas/react
 - Personalized mailing
 - Account confirmation
 - Use of graphql and apollo server
-- Web scokets with Graphql
+- Web sockets with Graphql
 - Handlebears for mail templates
 - Postgress with TypeORM
 - Tasks schedules
