@@ -10,7 +10,7 @@ npx concurrently \
   --prefix "[{name}]" \
   --names "test,lint,typecheck,build" \
   --prefix-colors "bgGreen.bold,bgRed.bold,bgMagenta.bold,bgBlue.bold" \
-    "yarn run test --watch=false" \
-    "yarn run lint" \
-    "yarn run typecheck" \
-    "yarn run build" \
+    "npm run test --watch=false" \
+    "npm run lint" \
+    "npm run typecheck" \
+    "npm run build" \

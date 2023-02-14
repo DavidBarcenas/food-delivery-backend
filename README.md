@@ -49,7 +49,7 @@ $ git clone https://github.com/DavidBarcenas/food-delivery-backend.git
 $ cd food-delivery-backend
 
 # Install dependencies
-$ yarn install
+$ npm install
 ```
 
 You must have [docker](https://www.docker.com/get-started/) installed to create and run the
@@ -77,9 +77,9 @@ docker exec -it <container-name> psql -U <username> <database>
 food_delivery=#
 
 # Then run the following command to list the tables (you can run any PSQL-Query you like)
-# e.g. food_delivery=# \dt
 \dt
 
+# e.g. food_delivery=# \dt
 # The output of the above command
                  List of relations
  Schema |          Name          | Type  |
@@ -113,8 +113,8 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-_Sometimes when you get an error in terminal such as file not found, it can be fixed by removing the
-**dist** folder from the root._
+_Sometimes when you get an error in terminal like file not found, it can be fixed by removing the
+**dist** folder from the root. Or, you can also run the command `npm run prebuild`_
 
 After successfully running the application, you can go to
 [http://localhost:4000/graphql](http://localhost:4000/graphql) to interact with the graphql
