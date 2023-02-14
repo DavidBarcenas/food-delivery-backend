@@ -56,27 +56,71 @@ You must have [docker](https://www.docker.com/get-started/) installed to create 
 database.
 
 ```bash
+# It will create the database container
 $ docker-compose up
+
+# If you see the message below in your terminal, the container was created successfully.
+database system is ready to accept connections
+```
+
+To connect to the database you can use a tool like [DBeaver](https://dbeaver.io/) or the one you
+prefer. The data you need for the connection can be found and configured in the
+**docker-compose.yml** file.
+
+In any case, I leave you the commands in case you want to see the tables from your terminal.
+
+```bash
+# First you have to access the container
+docker exec -it <container-name> psql -U <username> <database>
+
+# If you accessed correctly you will see this change in your terminal
+food_delivery=#
+
+# Then run the following command to list the tables (you can run any PSQL-Query you like)
+# e.g. food_delivery=# \dt
+\dt
+
+# The output of the above command
+                 List of relations
+ Schema |          Name          | Type  |
+--------+------------------------+-------+
+ public | category               | table |
+ public | dish                   | table |
+ public | email_verification     | table |
+ public | order                  | table |
+ public | order_item             | table |
+ public | payment                | table |
+ public | restaurant             | table |
+ public | typeorm_metadata       | table |
+ public | u
 ```
 
 ## Development
 
 Starts the application in development mode with active code reloading, bug reports, and more.
 
+For the application to run properly don't forget to add your **.env.dev, .env.prod and .env.test
+files** in the root of the project (at the same level as the src folder).
+
 ```bash
 # development
 $ npm run start
 
-# watch mode
+# development and watch mode
 $ npm run start:dev
 
 # production mode
 $ npm run start:prod
 ```
 
+_Sometimes when you get an error in terminal such as file not found, it can be fixed by removing the
+**dist** folder from the root._
+
 After successfully running the application, you can go to
 [http://localhost:4000/graphql](http://localhost:4000/graphql) to interact with the graphql
 playground.
+
+![](./.readme-static/localhost_4000_graphql.png)
 
 ## Test
 
